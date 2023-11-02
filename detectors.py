@@ -181,7 +181,7 @@ class EntanglementDetector(PatternDetector):
 
 
 if __name__ == '__main__':
-    input_file: TextIOWrapper = open("C:/Uni/quantum-pattern-detector/code-example.txt")
+    input_file: TextIOWrapper = open("C:/quantum-pattern-detector/code-example.txt")
     msg: str = UniformSuperpositionDetector(input_file).build_message() \
         + '\n' + EntanglementDetector(input_file).build_message()
     print(msg)
