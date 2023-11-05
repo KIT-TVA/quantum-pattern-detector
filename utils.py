@@ -1,4 +1,5 @@
 from io import TextIOWrapper
+from typing import Generator
 
 
 class FileReader:
@@ -22,13 +23,13 @@ class FileReader:
 
 
 # Calculates all possible combinations of values in the input list.
-def get_combinations(input_list: list):
-    masks = [1 << i for i in range(len(input_list))]
+def get_combinations(input_list: list) -> Generator:
+    masks: list = [1 << i for i in range(len(input_list))]
     for i in range(1 << len(input_list)):
         yield [ss for mask, ss in zip(masks, input_list) if i & mask]
 
 
-def all_equal(list: list, indices: list):
+def all_equal(list: list, indices: list) -> bool:
     to_compare = list[indices[0]]
 
     for i in indices:
@@ -38,7 +39,7 @@ def all_equal(list: list, indices: list):
     return True
 
 
-def convert_to_int(list):
+def convert_to_int(list: list) -> list:
     for i in range(0, len(list)):
         list[i] = int(list[i], 2)
 

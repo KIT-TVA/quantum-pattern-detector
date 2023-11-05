@@ -2,11 +2,15 @@ from utils import FileReader, get_combinations, all_equal, convert_to_int
 
 import qiskit.qasm2
 from abc import ABC, abstractmethod
-from qiskit import QuantumCircuit, Aer
+from qiskit import QuantumCircuit, QuantumRegister, Aer
 from qiskit.quantum_info import schmidt_decomposition
 from qiskit_aer.backends import StatevectorSimulator
 from qiskit_aer.backends.compatibility import Statevector
 from qiskit.result import Result
+from qiskit.converters import circuit_to_dag
+from qiskit.dagcircuit import DAGCircuit
+from qiskit.circuit.quantumcircuit import BitLocations
+from qiskit.circuit.library import XGate
 from io import TextIOWrapper
 from copy import deepcopy
 
@@ -180,8 +184,52 @@ class EntanglementDetector(PatternDetector):
         return message.strip()
 
 
+class BasisEncodingDetector(PatternDetector):
+    
+    def __init__(self, program: TextIOWrapper) -> None:
+        super().__init__(program)
+        self.load_circuit(self.program)
+
+    # Search for Pauli-X gates in the first layer.
+    def build_message(self) -> str:
+        
+        message: str = ""
+        encoded_nums: dict = {}
+        dag: DAGCircuit = circuit_to_dag(self.circuit)
+
+        for node in dag.front_layer():
+            if node.name == XGate().name:
+                qubit = node.qargs[0]
+                location: BitLocations = self.circuit.find_bit(qubit)
+                register: QuantumRegister = location[1][0][0]
+                index: int = location[1][0][1]
+                
+                if register in encoded_nums:
+                    encoded_nums[register].append(index)
+                else:
+                    encoded_nums[register] = [index]
+
+        for reg, index_list in encoded_nums.items():
+            decimal: int = self._bin_index_to_decimal(index_list, reg.size)
+            message += "Basis Encoding: {num} is encoded in quantum register {reg}.\n"\
+                .format(num=decimal, reg=reg.name)
+            
+        return message.strip()
+        
+
+    def _bin_index_to_decimal(self, index_list: list, num_of_qubits: int) -> int:
+
+        binary_list: list = []
+        for qubit in range(0, num_of_qubits):
+            if qubit in index_list:
+                binary_list.append(1)
+            else:
+                binary_list.append(0)
+        
+        return sum(val*(2**idx) for idx, val in enumerate(binary_list))
+
+
 if __name__ == '__main__':
     input_file: TextIOWrapper = open("C:/quantum-pattern-detector/code-example.txt")
-    msg: str = UniformSuperpositionDetector(input_file).build_message() \
-        + '\n' + EntanglementDetector(input_file).build_message()
+    msg: str = BasisEncodingDetector(input_file).build_message()
     print(msg)
