@@ -9,10 +9,11 @@ from qiskit_aer.backends.compatibility import Statevector
 from qiskit.result import Result
 from qiskit.converters import circuit_to_dag
 from qiskit.dagcircuit import DAGCircuit
-from qiskit.circuit.quantumcircuit import BitLocations
-from qiskit.circuit.library import XGate
+from qiskit.circuit.quantumcircuit import BitLocations, Qubit
+from qiskit.circuit.library import XGate, RYGate
 from io import TextIOWrapper
 from copy import deepcopy
+from math import pi
 
 
 class PatternDetector(ABC):
@@ -199,10 +200,10 @@ class BasisEncodingDetector(PatternDetector):
 
         for node in dag.front_layer():
             if node.name == XGate().name:
-                qubit = node.qargs[0]
+                qubit: Qubit = node.qargs[0]
                 location: BitLocations = self.circuit.find_bit(qubit)
-                register: QuantumRegister = location[1][0][0]
-                index: int = location[1][0][1]
+                register: QuantumRegister = location.registers[0][0]
+                index: int = location.registers[0][1]
                 
                 if register in encoded_nums:
                     encoded_nums[register].append(index)
@@ -211,7 +212,7 @@ class BasisEncodingDetector(PatternDetector):
 
         for reg, index_list in encoded_nums.items():
             decimal: int = self._bin_index_to_decimal(index_list, reg.size)
-            message += "Basis Encoding: {num} is encoded in quantum register {reg}.\n"\
+            message += "Basis Encoding: Value {num} is encoded in quantum register {reg}.\n"\
                 .format(num=decimal, reg=reg.name)
             
         return message.strip()
@@ -229,7 +230,34 @@ class BasisEncodingDetector(PatternDetector):
         return sum(val*(2**idx) for idx, val in enumerate(binary_list))
 
 
+class AngleEncodingDetector(PatternDetector):
+
+    def __init__(self, program: TextIOWrapper) -> None:
+        super().__init__(program)
+        self.load_circuit(self.program)
+
+    # Search for R_y gates in the first layer.
+    def build_message(self) -> str:
+        message: str = ""
+        dag: DAGCircuit = circuit_to_dag(self.circuit)
+
+        for node in dag.front_layer():
+            # Angle has to satisfy normalization constraint.
+            if node.name == RYGate(0).name and node.op.params[0] < pi:
+                qubit: Qubit = node.qargs[0]
+                location: BitLocations = self.circuit.find_bit(qubit)
+                register: QuantumRegister = location.registers[0][0]
+                message += "Angle Encoding: Qubit {qubit} in quantum register {reg} is used for angle encoding.\n"\
+                    .format(qubit=location.index, reg=register.name)
+
+        return message.strip()
+
+
+class AmplitudeEncodingDetector(PatternDetector):
+    pass
+
+
 if __name__ == '__main__':
     input_file: TextIOWrapper = open("C:/quantum-pattern-detector/code-example.txt")
-    msg: str = BasisEncodingDetector(input_file).build_message()
+    msg: str = AngleEncodingDetector(input_file).build_message()
     print(msg)
