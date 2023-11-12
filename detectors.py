@@ -10,7 +10,7 @@ from qiskit.result import Result
 from qiskit.converters import circuit_to_dag
 from qiskit.dagcircuit import DAGCircuit
 from qiskit.circuit.quantumcircuit import BitLocations, Qubit
-from qiskit.circuit.library import XGate, RYGate
+from qiskit.circuit.library import XGate, RYGate, HGate
 from io import TextIOWrapper
 from copy import deepcopy
 from math import pi
@@ -257,7 +257,90 @@ class AmplitudeEncodingDetector(PatternDetector):
     pass
 
 
+class PhaseEstimationDetector(PatternDetector):
+
+    def __init__(self, program: TextIOWrapper) -> None:
+        super().__init__(program)
+        self.load_circuit(self.program)
+
+    # Search for the special circuit used for PhaseEstimation.
+    def build_message(self) -> str:
+        dag: DAGCircuit = circuit_to_dag(self.circuit)
+
+        # Stores bits in unifrom superposition with the corresponding gates.
+        # key: possible gate and the bits it operates on
+        # value: list of hadamard transformed bits
+        hadamards: dict = {}
+
+        found_u: bool = False
+
+        # Iterate through all layers of the circuit.
+        for layer in dag.layers():
+
+            # First iteration to fing u gates.
+            for node in layer['graph'].front_layer():
+
+                qubit: Qubit = node.qargs[0]
+                location: BitLocations = self.circuit.find_bit(qubit)
+                qubit_index: int = location.index
+
+                # Look for U gates.
+                if node.op.num_qubits > 1:
+                    found_u = True
+                    operating_bits: list = []
+                    for i in range(1, len(node.qargs)):
+                        o_qubit: Qubit = node.qargs[i]
+                        location: BitLocations = self.circuit.find_bit(o_qubit)
+                        operating_bits.append(location.index)
+
+                    for key, value in hadamards.copy().items():
+                        if qubit_index not in value:
+                            del hadamards[key]
+                            continue
+
+                        # Save gate name and the operating qubits in key.
+                        current_key: str = repr((node.name, operating_bits))
+                        if key == "": 
+                            hadamards[current_key] = hadamards.pop("")
+                            hadamards[current_key].remove(qubit_index)
+                            continue
+
+                        if key != current_key:
+                            del hadamards[key]
+                            continue
+
+                        hadamards[key].remove(qubit_index)
+
+            if not found_u:
+                hadamards.clear()
+
+            found_u = False
+
+            # Second iteration for adding Hadamard transformed qubits.
+            for node in layer['graph'].front_layer():   
+                if node.name == HGate().name:
+
+                    qubit: Qubit = node.qargs[0]
+                    location: BitLocations = self.circuit.find_bit(qubit)
+                    qubit_index: int = location.index
+
+                    if "" in hadamards.keys():
+                        hadamards[""].append(qubit_index)
+                        continue
+
+                    hadamards[""] = [qubit_index]
+
+            # If all ancillary bits are used, an instance of the pattern has been found.
+            for value in hadamards.values():
+                if not value:
+                    return "Quantum Phase Estimation: Instance of Quantum Phase Estimation detected."
+
+
+class UncomputeDetector(PatternDetector):
+    pass
+
+
 if __name__ == '__main__':
     input_file: TextIOWrapper = open("C:/quantum-pattern-detector/code-example.txt")
-    msg: str = AngleEncodingDetector(input_file).build_message()
+    msg: str = PhaseEstimationDetector(input_file).build_message()
     print(msg)
