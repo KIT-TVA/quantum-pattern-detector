@@ -10,7 +10,7 @@ from qiskit.result import Result
 from qiskit.converters import circuit_to_dag
 from qiskit.dagcircuit import DAGCircuit
 from qiskit.circuit.quantumcircuit import BitLocations, Qubit
-from qiskit.circuit.library import XGate, RYGate, HGate
+from qiskit.circuit.library import XGate, RYGate, HGate, CXGate, SwapGate
 from io import TextIOWrapper
 from copy import deepcopy
 from math import pi
@@ -25,7 +25,14 @@ class PatternDetector(ABC):
     def load_circuit(self, program: TextIOWrapper) -> None:
         program_str: str = program.read()
         self.program.seek(0)
-        self.circuit: QuantumCircuit = qiskit.qasm2.loads(program_str)
+
+        # Workaround to find all possible gates due to a bug in qiskit's current parser.
+        self.circuit: QuantumCircuit = qiskit.qasm2.loads(
+            program_str, 
+            include_path=qiskit.qasm2.LEGACY_INCLUDE_PATH,
+            custom_instructions=qiskit.qasm2.LEGACY_CUSTOM_INSTRUCTIONS,
+            custom_classical=qiskit.qasm2.LEGACY_CUSTOM_CLASSICAL
+        )
 
     @abstractmethod
     def build_message(self) -> str:
@@ -254,6 +261,8 @@ class AngleEncodingDetector(PatternDetector):
 
 
 class AmplitudeEncodingDetector(PatternDetector):
+    
+    # There are many methods for creating amplitude encoding which makes it difficult to detect.
     pass
 
 
@@ -337,10 +346,56 @@ class PhaseEstimationDetector(PatternDetector):
 
 
 class UncomputeDetector(PatternDetector):
-    pass
+    
+    def __init__(self, program: TextIOWrapper) -> None:
+        super().__init__(program)
+        self.load_circuit(self.program)
+
+    def build_message(self) -> str:
+
+        dag: DAGCircuit = circuit_to_dag(self.circuit)
+
+        # Stores all bit pairs where a cx gate has been applied to.
+        # key: control bit
+        # value: operating bit
+        cx_nodes: dict = {}
+
+        added: bool = False
+        
+        for layer in dag.layers():
+            for node in layer['graph'].front_layer():
+                if node.name == CXGate().name:
+                    c_bit: Qubit = node.qargs[0]
+                    o_bit: Qubit = node.qargs[1]
+                    c_bit_index: int = self.circuit.find_bit(c_bit).index
+                    o_bit_index: int = self.circuit.find_bit(o_bit).index
+
+                    # If cx operations overlap then it is unlikely this pattern.
+                    if o_bit_index in cx_nodes.keys() or o_bit_index in cx_nodes.values() \
+                        or c_bit_index in cx_nodes.values():
+                        
+                        cx_nodes.clear()
+
+                    cx_nodes[c_bit_index] = o_bit_index
+                    added = True
+
+                if node.name == SwapGate().name:
+                    first_bit: Qubit = node.qargs[0]
+                    second_bit: Qubit = node.qargs[1]
+                    first_bit_index: int = self.circuit.find_bit(first_bit).index
+                    second_bit_index: int = self.circuit.find_bit(second_bit).index
+
+                    for key in cx_nodes.copy().keys():
+                        if (key == first_bit_index and cx_nodes[key] == second_bit_index) or \
+                            key == second_bit_index and cx_nodes[key] == first_bit_index:
+
+                            del cx_nodes[key]
+
+                if added and not cx_nodes:
+                    return "Uncompute: Instance of Uncompute detected."
 
 
 if __name__ == '__main__':
     input_file: TextIOWrapper = open("C:/quantum-pattern-detector/code-example.txt")
-    msg: str = PhaseEstimationDetector(input_file).build_message()
+    msg: str = UncomputeDetector(input_file).build_message()
     print(msg)
