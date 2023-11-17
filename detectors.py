@@ -193,6 +193,8 @@ class EntanglementDetector(PatternDetector):
 
 
 class BasisEncodingDetector(PatternDetector):
+
+    THRESHOLD: float = 0.5
     
     def __init__(self, program: TextIOWrapper) -> None:
         super().__init__(program)
@@ -217,6 +219,10 @@ class BasisEncodingDetector(PatternDetector):
                 else:
                     encoded_nums[register] = [index]
 
+        for register in encoded_nums.copy().keys():
+            if len(encoded_nums[register]) < self.THRESHOLD * register.size:
+                del encoded_nums[register]
+
         for reg, index_list in encoded_nums.items():
             decimal: int = self._bin_index_to_decimal(index_list, reg.size)
             message += "Basis Encoding: Value {num} is encoded in quantum register {reg}.\n"\
@@ -233,11 +239,15 @@ class BasisEncodingDetector(PatternDetector):
                 binary_list.append(1)
             else:
                 binary_list.append(0)
+
+        binary_list.reverse()
         
         return sum(val*(2**idx) for idx, val in enumerate(binary_list))
 
 
 class AngleEncodingDetector(PatternDetector):
+
+    THRESHOLD: float = 0.3
 
     def __init__(self, program: TextIOWrapper) -> None:
         super().__init__(program)
@@ -246,16 +256,21 @@ class AngleEncodingDetector(PatternDetector):
     # Search for R_y gates in the first layer.
     def build_message(self) -> str:
         message: str = ""
+        gate_count: int = 0
         dag: DAGCircuit = circuit_to_dag(self.circuit)
 
         for node in dag.front_layer():
             # Angle has to satisfy normalization constraint.
             if node.name == RYGate(0).name and node.op.params[0] < pi:
+                gate_count += 1
                 qubit: Qubit = node.qargs[0]
                 location: BitLocations = self.circuit.find_bit(qubit)
                 register: QuantumRegister = location.registers[0][0]
                 message += "Angle Encoding: Qubit {qubit} in quantum register {reg} is used for angle encoding.\n"\
                     .format(qubit=location.index, reg=register.name)
+        
+        if gate_count < self.THRESHOLD * self.circuit.num_qubits:
+            message = ""
 
         return message.strip()
 
@@ -393,9 +408,13 @@ class UncomputeDetector(PatternDetector):
 
                 if added and not cx_nodes:
                     return "Uncompute: Instance of Uncompute detected."
+                
+
+class SchmidtDecompositionDetector(PatternDetector):
+    pass
 
 
 if __name__ == '__main__':
     input_file: TextIOWrapper = open("C:/quantum-pattern-detector/code-example.txt")
-    msg: str = UncomputeDetector(input_file).build_message()
+    msg: str = AngleEncodingDetector(input_file).build_message()
     print(msg)
