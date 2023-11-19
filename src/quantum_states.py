@@ -4,8 +4,8 @@ from abstract_detector import PatternDetector
 import qiskit.qasm2
 from qiskit import Aer
 from qiskit_aer.backends import StatevectorSimulator
-from qiskit.quantum_info import schmidt_decomposition
 from qiskit_aer.backends.compatibility import Statevector
+from qiskit.quantum_info import schmidt_decomposition
 from qiskit.result import Result
 from copy import deepcopy
 from io import TextIOWrapper
@@ -48,8 +48,7 @@ class EntanglementDetector(PatternDetector):
 
                 schmidt_coefficents: list = []
                 for decomp_elem in decomp:
-                    if decomp_elem[0] > 0:
-                        schmidt_coefficents.append(decomp_elem[0])
+                    schmidt_coefficents.append(decomp_elem[0])
 
                 # Number of posititve Schmidt coefficients is called the Schmidt-rank of the state vector.
                 # The quantum state is entangled iff the Schmidt-rank is greater than 1.

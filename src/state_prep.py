@@ -1,10 +1,10 @@
 from abstract_detector import PatternDetector
 
 from qiskit import QuantumRegister
+from qiskit.circuit.library import XGate, RYGate
 from qiskit.circuit.quantumcircuit import BitLocations, Qubit
 from qiskit.converters import circuit_to_dag
 from qiskit.dagcircuit import DAGCircuit
-from qiskit.circuit.library import XGate, RYGate
 from math import pi
 from io import TextIOWrapper
 
@@ -96,7 +96,3 @@ class BasisEncodingDetector(PatternDetector):
         binary_list.reverse()
         
         return sum(val*(2**idx) for idx, val in enumerate(binary_list))
-    
-
-class SchmidtDecompositionDetector(PatternDetector):
-    pass
