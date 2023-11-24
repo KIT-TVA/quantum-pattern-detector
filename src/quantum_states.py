@@ -26,7 +26,7 @@ class EntanglementDetector(PatternDetector):
         # Read input file line after line.
         for line_num in range(0, program_len):
             current_program: str = reader.read_file_until(line_num)
-            self.circuit = qiskit.qasm2.loads(current_program)
+            self.load_circuit_from_str(current_program)
 
             if self.circuit.depth() == 0:
                 if is_entangled:
@@ -89,7 +89,7 @@ class UniformSuperpositionDetector(PatternDetector):
         # Read input line after line.
         for line_num in range(0, program_len):
             current_program: str = reader.read_file_until(line_num)
-            self.circuit = qiskit.qasm2.loads(current_program)
+            self.load_circuit_from_str(current_program)
 
             # Circuit with depth of 0 cannot be in uniform superposition.
             if self.circuit.depth() == 0:

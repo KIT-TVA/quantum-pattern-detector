@@ -12,7 +12,10 @@ class PatternDetector(ABC):
 
     def load_circuit(self, program: TextIOWrapper) -> None:
         program_str: str = program.read()
-        self.program.seek(0)
+        self.program.seek(0) 
+        self.load_circuit_from_str(program_str)
+
+    def load_circuit_from_str(self, program_str: str) -> None:
 
         # Workaround to find all possible gates due to a bug in qiskit's current parser.
         self.circuit: QuantumCircuit = qiskit.qasm2.loads(
