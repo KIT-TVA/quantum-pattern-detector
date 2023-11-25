@@ -1,8 +1,7 @@
-from utils import FileReader, get_combinations, all_equal, convert_to_int
+from utils import FileReader, get_combinations, convert_to_int
 from abstract_detector import PatternDetector
 
-import qiskit.qasm2
-from qiskit import Aer
+from qiskit import Aer, transpile
 from qiskit_aer.backends import StatevectorSimulator
 from qiskit_aer.backends.compatibility import Statevector
 from qiskit.quantum_info import schmidt_decomposition
@@ -26,17 +25,18 @@ class EntanglementDetector(PatternDetector):
         # Read input file line after line.
         for line_num in range(0, program_len):
             current_program: str = reader.read_file_until(line_num)
-            self.circuit = qiskit.qasm2.loads(current_program)
+            self.load_circuit_from_str(current_program)
 
             if self.circuit.depth() == 0:
                 if is_entangled:
                     message += "Creating Entanglement: Quantum state is not entangled from line {ln} onwards.\n"\
-                        .format(ln=line_num)
+                        .format(ln=line_num + 1)
                     is_entangled = False
                 continue
 
             # Calculate the state vector of the circuit.
             backend: StatevectorSimulator = Aer.get_backend('statevector_simulator')
+            self.circuit = transpile(self.circuit, backend)
             result: Result = backend.run(self.circuit).result()
             outputstate: Statevector = result.get_statevector(self.circuit)
 
@@ -50,12 +50,13 @@ class EntanglementDetector(PatternDetector):
                 for decomp_elem in decomp:
                     schmidt_coefficents.append(decomp_elem[0])
 
+                print("SC after line {ln}: {list}".format(ln=line_num+1, list=schmidt_coefficents))
                 # Number of posititve Schmidt coefficients is called the Schmidt-rank of the state vector.
                 # The quantum state is entangled iff the Schmidt-rank is greater than 1.
                 if len(schmidt_coefficents) > 1:
                     if not is_entangled:
                         message += "Creating Entanglement: Quantum state is entangled from line {ln} onwards.\n"\
-                            .format(ln=line_num)
+                            .format(ln=line_num + 1)
                         is_entangled = True
                     found = True
                     break
@@ -67,7 +68,7 @@ class EntanglementDetector(PatternDetector):
             if is_entangled:
                 is_entangled = False
                 message += "Creating Entanglement: Quantum state is not entangled from line {ln} onwards.\n"\
-                    .format(ln=line_num)
+                    .format(ln=line_num + 1)
 
         return message.strip()
 
@@ -89,26 +90,31 @@ class UniformSuperpositionDetector(PatternDetector):
         # Read input line after line.
         for line_num in range(0, program_len):
             current_program: str = reader.read_file_until(line_num)
-            self.circuit = qiskit.qasm2.loads(current_program)
+            self.load_circuit_from_str(current_program)
 
             # Circuit with depth of 0 cannot be in uniform superposition.
             if self.circuit.depth() == 0:
                 if in_ufs:
                     message += ("Uniform Superposition: Quantum state is not in uniform superposition"
-                                "from line {ln} onwards.\n").format(ln=line_num)
+                                "from line {ln} onwards.\n").format(ln=line_num + 1)
                     in_ufs = False
                 continue
 
             # Calculate the state vector of the circuit.
             backend: StatevectorSimulator = Aer.get_backend('statevector_simulator')
+            self.circuit = transpile(self.circuit, backend)
             result: Result = backend.run(self.circuit).result()
             outputstate: Statevector = result.get_statevector(self.circuit)
 
             # Calculate state probabilities and check if they are all equal. Ancilla bits, that do not have to be in
             # superposition, are also taken into account.
             prob: list = outputstate.probabilities()
+            rounded_prob: list =  [round(x,3) for x in prob] 
+
+            # Binary encodes states
             binary_combinations: list = self._calc_all_binary_combinations(self.circuit.num_qubits)
 
+            # All possible ancilla bits
             state_combinations: list = list(get_combinations(range(0, self.circuit.num_qubits)))
             state_combinations.pop()
 
@@ -117,10 +123,10 @@ class UniformSuperpositionDetector(PatternDetector):
                 c_binary_combinations: list = deepcopy(binary_combinations)
                 filtered_states: list = self._filter_indices(c_binary_combinations, state)
 
-                if all_equal(prob, convert_to_int(filtered_states)):
+                if self._in_ufs(rounded_prob, convert_to_int(filtered_states)):
                     if not in_ufs:
                         message += ("Uniform Superposition: Quantum state is in uniform superposition"
-                                    "from line {ln} onwards.\n").format(ln=line_num)
+                                    "from line {ln} onwards.\n").format(ln=line_num + 1)
                         in_ufs = True
 
                     found = True
@@ -133,7 +139,7 @@ class UniformSuperpositionDetector(PatternDetector):
             if in_ufs:
                 in_ufs = False
                 message += ("Uniform Superposition: Quantum state is not in uniform superposition"
-                            "from line {ln} onwards.\n").format(ln=line_num)
+                            "from line {ln} onwards.\n").format(ln=line_num + 1)
 
         return message.strip()
 
@@ -146,7 +152,7 @@ class UniformSuperpositionDetector(PatternDetector):
 
         return result
 
-    def _filter_indices(self, binary_list: list, index_list: list):
+    def _filter_indices(self, binary_list: list, index_list: list) -> list:
         list_copy: list = deepcopy(binary_list)
         to_delete: list = []
         elem_count: int = 0
@@ -161,3 +167,22 @@ class UniformSuperpositionDetector(PatternDetector):
             list_copy.pop(i)
 
         return list_copy
+
+    def _in_ufs(self, list: list, indices: list) -> bool:
+        to_compare = list[indices[0]]
+
+        if to_compare == 0:
+            return False
+
+        for i in indices:
+            if list[i] != to_compare:
+                return False
+
+        total: int = 0 
+        for i in indices:
+            total += list[i]
+
+        if total != 1:
+            return False
+
+        return True

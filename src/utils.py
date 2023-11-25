@@ -1,5 +1,6 @@
 from io import TextIOWrapper
 from typing import Generator
+from copy import deepcopy
 
 
 class FileReader:
@@ -29,18 +30,9 @@ def get_combinations(input_list: list) -> Generator:
         yield [ss for mask, ss in zip(masks, input_list) if i & mask]
 
 
-def all_equal(list: list, indices: list) -> bool:
-    to_compare = list[indices[0]]
-
-    for i in indices:
-        if list[i] != to_compare:
-            return False
-
-    return True
-
-
 def convert_to_int(list: list) -> list:
+    copy = deepcopy(list)
     for i in range(0, len(list)):
-        list[i] = int(list[i], 2)
+        copy[i] = int(list[i], 2)
 
-    return list
+    return copy
