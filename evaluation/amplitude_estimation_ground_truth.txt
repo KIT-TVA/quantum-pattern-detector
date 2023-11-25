@@ -1,0 +1,14 @@
+Amplitude Estimation for 3 qubits:
+-----------------------------------
+
+Uniform Superposition:
+  - 
+
+
+Entanglement:
+  -
+
+Quantum Phase Estimation:
+  - Used after the first R_y gate on q.
+
+Note: First R_y gate on register q is used to encode Bernoulli Q operator --> Not angle encoding.

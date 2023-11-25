@@ -6,6 +6,6 @@ from measurement import PostSelectiveMeasurementDetector
 from io import TextIOWrapper
 
 if __name__ == '__main__':
-    input_file: TextIOWrapper = open("C:/quantum-pattern-detector/evaluation/grover.qasm")
-    msg: str = EntanglementDetector(input_file).build_message()
+    input_file: TextIOWrapper = open("C:/quantum-pattern-detector/evaluation/amplitude_estimation.qasm")
+    msg: str = BasisEncodingDetector(input_file).build_message()
     print(msg)
