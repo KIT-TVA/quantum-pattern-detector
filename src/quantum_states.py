@@ -30,7 +30,7 @@ class EntanglementDetector(PatternDetector):
             if self.circuit.depth() == 0:
                 if is_entangled:
                     message += "Creating Entanglement: Quantum state is not entangled from line {ln} onwards.\n"\
-                        .format(ln=line_num)
+                        .format(ln=line_num + 1)
                     is_entangled = False
                 continue
 
@@ -67,7 +67,7 @@ class EntanglementDetector(PatternDetector):
             if is_entangled:
                 is_entangled = False
                 message += "Creating Entanglement: Quantum state is not entangled from line {ln} onwards.\n"\
-                    .format(ln=line_num)
+                    .format(ln=line_num + 1)
 
         return message.strip()
 
@@ -95,7 +95,7 @@ class UniformSuperpositionDetector(PatternDetector):
             if self.circuit.depth() == 0:
                 if in_ufs:
                     message += ("Uniform Superposition: Quantum state is not in uniform superposition"
-                                "from line {ln} onwards.\n").format(ln=line_num)
+                                "from line {ln} onwards.\n").format(ln=line_num + 1)
                     in_ufs = False
                 continue
 
@@ -108,8 +108,12 @@ class UniformSuperpositionDetector(PatternDetector):
             # Calculate state probabilities and check if they are all equal. Ancilla bits, that do not have to be in
             # superposition, are also taken into account.
             prob: list = outputstate.probabilities()
+            rounded_prob: list =  [round(x,3) for x in prob] 
+
+            # Binary encodes states
             binary_combinations: list = self._calc_all_binary_combinations(self.circuit.num_qubits)
 
+            # All possible ancilla bits
             state_combinations: list = list(get_combinations(range(0, self.circuit.num_qubits)))
             state_combinations.pop()
 
@@ -118,10 +122,10 @@ class UniformSuperpositionDetector(PatternDetector):
                 c_binary_combinations: list = deepcopy(binary_combinations)
                 filtered_states: list = self._filter_indices(c_binary_combinations, state)
 
-                if all_equal(prob, convert_to_int(filtered_states)):
+                if all_equal(rounded_prob, convert_to_int(filtered_states)):
                     if not in_ufs:
                         message += ("Uniform Superposition: Quantum state is in uniform superposition"
-                                    "from line {ln} onwards.\n").format(ln=line_num)
+                                    "from line {ln} onwards.\n").format(ln=line_num + 1)
                         in_ufs = True
 
                     found = True
@@ -134,7 +138,7 @@ class UniformSuperpositionDetector(PatternDetector):
             if in_ufs:
                 in_ufs = False
                 message += ("Uniform Superposition: Quantum state is not in uniform superposition"
-                            "from line {ln} onwards.\n").format(ln=line_num)
+                            "from line {ln} onwards.\n").format(ln=line_num + 1)
 
         return message.strip()
 
@@ -147,7 +151,7 @@ class UniformSuperpositionDetector(PatternDetector):
 
         return result
 
-    def _filter_indices(self, binary_list: list, index_list: list):
+    def _filter_indices(self, binary_list: list, index_list: list) -> list:
         list_copy: list = deepcopy(binary_list)
         to_delete: list = []
         elem_count: int = 0

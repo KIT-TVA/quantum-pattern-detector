@@ -1,5 +1,6 @@
 from io import TextIOWrapper
 from typing import Generator
+from copy import deepcopy
 
 
 class FileReader:
@@ -40,7 +41,8 @@ def all_equal(list: list, indices: list) -> bool:
 
 
 def convert_to_int(list: list) -> list:
+    copy = deepcopy(list)
     for i in range(0, len(list)):
-        list[i] = int(list[i], 2)
+        copy[i] = int(list[i], 2)
 
-    return list
+    return copy
