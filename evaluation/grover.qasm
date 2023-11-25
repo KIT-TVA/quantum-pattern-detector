@@ -1,0 +1,36 @@
+OPENQASM 2.0;
+include "qelib1.inc";
+gate mcphase(param0) q0,q1 { cp(pi/2) q0,q1; }
+gate ccz q0,q1,q2 { cx q0,q2; u(0,-pi/8,-pi/8) q2; cx q1,q2; u(0,-7*pi/8,-7*pi/8) q2; cx q0,q2; u(0,-pi/8,-pi/8) q2; cx q1,q2; u(0,-7*pi/8,-7*pi/8) q2; mcphase(pi/2) q0,q1; }
+qreg q[3];
+creg meas[3];
+h q[0];
+h q[1];
+h q[2];
+x q[2];
+ccz q[0],q[1],q[2];
+x q[0];
+x q[1];
+x q[2];
+ccz q[0],q[1],q[2];
+x q[0];
+h q[0];
+x q[0];
+x q[1];
+h q[1];
+x q[1];
+h q[2];
+x q[2];
+h q[2];
+ccx q[0],q[1],q[2];
+x q[0];
+h q[0];
+x q[1];
+h q[1];
+h q[2];
+x q[2];
+h q[2];
+barrier q[0],q[1],q[2];
+measure q[0] -> meas[0];
+measure q[1] -> meas[1];
+measure q[2] -> meas[2];

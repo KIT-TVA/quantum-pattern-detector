@@ -1,8 +1,7 @@
 from utils import FileReader, get_combinations, all_equal, convert_to_int
 from abstract_detector import PatternDetector
 
-import qiskit.qasm2
-from qiskit import Aer
+from qiskit import Aer, transpile
 from qiskit_aer.backends import StatevectorSimulator
 from qiskit_aer.backends.compatibility import Statevector
 from qiskit.quantum_info import schmidt_decomposition
@@ -37,6 +36,7 @@ class EntanglementDetector(PatternDetector):
 
             # Calculate the state vector of the circuit.
             backend: StatevectorSimulator = Aer.get_backend('statevector_simulator')
+            self.circuit = transpile(self.circuit, backend)
             result: Result = backend.run(self.circuit).result()
             outputstate: Statevector = result.get_statevector(self.circuit)
 
@@ -101,6 +101,7 @@ class UniformSuperpositionDetector(PatternDetector):
 
             # Calculate the state vector of the circuit.
             backend: StatevectorSimulator = Aer.get_backend('statevector_simulator')
+            self.circuit = transpile(self.circuit, backend)
             result: Result = backend.run(self.circuit).result()
             outputstate: Statevector = result.get_statevector(self.circuit)
 

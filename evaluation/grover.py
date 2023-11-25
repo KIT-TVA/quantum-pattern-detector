@@ -1,7 +1,8 @@
+# Adapted from https://qiskit.org/ecosystem/ibm-runtime/tutorials/grover_with_sampler.html
+
 import math
-from qiskit import QuantumCircuit, Aer
+from qiskit import QuantumCircuit
 from qiskit.circuit.library import GroverOperator, MCMT, ZGate
-from qiskit import transpile
 
 
 # Builds grover circuit for multiple marked states.
@@ -32,14 +33,3 @@ def grover_circuit(marked_states: list) -> QuantumCircuit:
     result.measure_all()
 
     return result
-
-
-marked_states = ["011", "100"]
-circuit = grover_circuit(marked_states)
-
-backend = Aer.get_backend('statevector_simulator')
-circuit = transpile(circuit, backend) # TODO: Add this to implementation of detectors
-result = backend.run(circuit).result()
-outputstate = result.get_statevector(circuit)
-
-print(outputstate)
