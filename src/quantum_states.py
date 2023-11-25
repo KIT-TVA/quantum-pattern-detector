@@ -50,6 +50,7 @@ class EntanglementDetector(PatternDetector):
                 for decomp_elem in decomp:
                     schmidt_coefficents.append(decomp_elem[0])
 
+                print("SC after line {ln}: {list}".format(ln=line_num+1, list=schmidt_coefficents))
                 # Number of posititve Schmidt coefficients is called the Schmidt-rank of the state vector.
                 # The quantum state is entangled iff the Schmidt-rank is greater than 1.
                 if len(schmidt_coefficents) > 1:
