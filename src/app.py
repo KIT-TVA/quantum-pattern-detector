@@ -7,5 +7,5 @@ from io import TextIOWrapper
 
 if __name__ == '__main__':
     input_file: TextIOWrapper = open("C:/quantum-pattern-detector/evaluation/grover.qasm")
-    msg: str = UniformSuperpositionDetector(input_file).build_message()
+    msg: str = EntanglementDetector(input_file).build_message()
     print(msg)

@@ -33,7 +33,3 @@ def grover_circuit(marked_states: list) -> QuantumCircuit:
     result.measure_all()
 
     return result
-
-marked_states = ["011", "100"]
-circuit = grover_circuit(marked_states)
-print(circuit)

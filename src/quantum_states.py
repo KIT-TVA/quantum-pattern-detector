@@ -1,4 +1,4 @@
-from utils import FileReader, get_combinations, all_equal, convert_to_int
+from utils import FileReader, get_combinations, convert_to_int
 from abstract_detector import PatternDetector
 
 from qiskit import Aer, transpile
@@ -55,7 +55,7 @@ class EntanglementDetector(PatternDetector):
                 if len(schmidt_coefficents) > 1:
                     if not is_entangled:
                         message += "Creating Entanglement: Quantum state is entangled from line {ln} onwards.\n"\
-                            .format(ln=line_num)
+                            .format(ln=line_num + 1)
                         is_entangled = True
                     found = True
                     break
@@ -122,7 +122,7 @@ class UniformSuperpositionDetector(PatternDetector):
                 c_binary_combinations: list = deepcopy(binary_combinations)
                 filtered_states: list = self._filter_indices(c_binary_combinations, state)
 
-                if all_equal(rounded_prob, convert_to_int(filtered_states)):
+                if self._in_ufs(rounded_prob, convert_to_int(filtered_states)):
                     if not in_ufs:
                         message += ("Uniform Superposition: Quantum state is in uniform superposition"
                                     "from line {ln} onwards.\n").format(ln=line_num + 1)
@@ -166,3 +166,22 @@ class UniformSuperpositionDetector(PatternDetector):
             list_copy.pop(i)
 
         return list_copy
+
+    def _in_ufs(self, list: list, indices: list) -> bool:
+        to_compare = list[indices[0]]
+
+        if to_compare == 0:
+            return False
+
+        for i in indices:
+            if list[i] != to_compare:
+                return False
+
+        total: int = 0 
+        for i in indices:
+            total += list[i]
+
+        if total != 1:
+            return False
+
+        return True
