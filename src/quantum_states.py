@@ -2,8 +2,11 @@ from utils import FileReader, get_combinations, convert_to_int
 from abstract_detector import PatternDetector
 
 from qiskit import Aer, transpile
-from qiskit_aer.backends import StatevectorSimulator
+from qiskit_aer.backends import AerSimulator, StatevectorSimulator
 from qiskit_aer.backends.compatibility import Statevector
+from qiskit.circuit.library import Measure
+from qiskit.converters import circuit_to_dag
+from qiskit.dagcircuit import DAGCircuit
 from qiskit.quantum_info import schmidt_decomposition
 from qiskit.result import Result
 from copy import deepcopy
@@ -50,7 +53,6 @@ class EntanglementDetector(PatternDetector):
                 for decomp_elem in decomp:
                     schmidt_coefficents.append(decomp_elem[0])
 
-                print("SC after line {ln}: {list}".format(ln=line_num+1, list=schmidt_coefficents))
                 # Number of posititve Schmidt coefficients is called the Schmidt-rank of the state vector.
                 # The quantum state is entangled iff the Schmidt-rank is greater than 1.
                 if len(schmidt_coefficents) > 1:
@@ -100,19 +102,41 @@ class UniformSuperpositionDetector(PatternDetector):
                     in_ufs = False
                 continue
 
-            # Calculate the state vector of the circuit.
-            backend: StatevectorSimulator = Aer.get_backend('statevector_simulator')
-            self.circuit = transpile(self.circuit, backend)
-            result: Result = backend.run(self.circuit).result()
-            outputstate: Statevector = result.get_statevector(self.circuit)
+            # Probabilities can somehow vary if measurements occur.
+            has_measurement: bool = False
+            reversed_dag: DAGCircuit = circuit_to_dag(self.circuit).reverse_ops()
+            for node in reversed_dag.front_layer():
+                if node.name == Measure().name:
+                    has_measurement = True
+            
+            prob: list = [0] * (2 ** self.circuit.num_qubits)
 
-            # Calculate state probabilities and check if they are all equal. Ancilla bits, that do not have to be in
-            # superposition, are also taken into account.
-            prob: list = outputstate.probabilities()
-            rounded_prob: list =  [round(x,3) for x in prob] 
+            # Calculate measurement probabilities by simulating measurements.
+            if has_measurement:
+                backend: AerSimulator = Aer.get_backend('aer_simulator')
+                self.circuit = transpile(self.circuit, backend)
+                result: Result = backend.run(self.circuit).result()
+                counts: dict = result.get_counts()
+                shots: int = sum(counts.values())
+
+                for key, value in counts.items():
+                    prob[int(key, 2)] = value / shots
+
+                has_measurement = False
+
+            else: 
+                # Calculate probabilities by analysing the statevector.
+                backend: StatevectorSimulator = Aer.get_backend('statevector_simulator')
+                self.circuit = transpile(self.circuit, backend)
+                result: Result = backend.run(self.circuit).result()
+                outputstate: Statevector = result.get_statevector(self.circuit)
+                prob: list = outputstate.probabilities()
+            
+            # Round probabilities for better comparison.
+            rounded_prob: list =  [round(x,4) for x in prob] 
 
             # Binary encodes states
-            binary_combinations: list = self._calc_all_binary_combinations(self.circuit.num_qubits)
+            binary_combinations: list = self.calc_all_binary_combinations(self.circuit.num_qubits)
 
             # All possible ancilla bits
             state_combinations: list = list(get_combinations(range(0, self.circuit.num_qubits)))
@@ -121,9 +145,13 @@ class UniformSuperpositionDetector(PatternDetector):
             found: bool = False
             for state in state_combinations:
                 c_binary_combinations: list = deepcopy(binary_combinations)
-                filtered_states: list = self._filter_indices(c_binary_combinations, state)
 
-                if self._in_ufs(rounded_prob, convert_to_int(filtered_states)):
+                filtered_states_0: list = self.filter_indices(c_binary_combinations, state, '0')
+                filtered_states_1: list = self.filter_indices(c_binary_combinations, state, '1')
+
+                if self.in_ufs(rounded_prob, convert_to_int(filtered_states_0)) or \
+                    self.in_ufs(rounded_prob, convert_to_int(filtered_states_1)):
+
                     if not in_ufs:
                         message += ("Uniform Superposition: Quantum state is in uniform superposition"
                                     "from line {ln} onwards.\n").format(ln=line_num + 1)
@@ -143,7 +171,8 @@ class UniformSuperpositionDetector(PatternDetector):
 
         return message.strip()
 
-    def _calc_all_binary_combinations(self, n: int) -> list:
+    @staticmethod
+    def calc_all_binary_combinations(n: int) -> list:
         result: list = []
         for i in range(1 << n):
             # Convert the current number to a binary string of length n
@@ -152,13 +181,14 @@ class UniformSuperpositionDetector(PatternDetector):
 
         return result
 
-    def _filter_indices(self, binary_list: list, index_list: list) -> list:
+    @staticmethod
+    def filter_indices(binary_list: list, index_list: list, significant_bit: str) -> list:
         list_copy: list = deepcopy(binary_list)
         to_delete: list = []
         elem_count: int = 0
         for i in range(0, len(binary_list)):
             for index in index_list:
-                if binary_list[i][index] != '0':
+                if binary_list[i][index] != significant_bit:
                     to_delete.append(i-elem_count)
                     elem_count += 1
                     break
@@ -168,8 +198,9 @@ class UniformSuperpositionDetector(PatternDetector):
 
         return list_copy
 
-    def _in_ufs(self, list: list, indices: list) -> bool:
-        to_compare = list[indices[0]]
+    @staticmethod
+    def in_ufs(list: list, indices: list) -> bool:
+        to_compare: float = list[indices[0]]
 
         if to_compare == 0:
             return False
@@ -178,7 +209,7 @@ class UniformSuperpositionDetector(PatternDetector):
             if list[i] != to_compare:
                 return False
 
-        total: int = 0 
+        total: float = 0.0
         for i in indices:
             total += list[i]
 

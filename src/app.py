@@ -6,6 +6,6 @@ from measurement import PostSelectiveMeasurementDetector
 from io import TextIOWrapper
 
 if __name__ == '__main__':
-    input_file: TextIOWrapper = open("C:/quantum-pattern-detector/evaluation/amplitude_estimation/amplitude_estimation.qasm")
-    msg: str = EntanglementDetector(input_file).build_message()
+    input_file: TextIOWrapper = open("C:/quantum-pattern-detector/evaluation/deutsch_jozsa/deutsch_jozsa.qasm")
+    msg: str = UniformSuperpositionDetector(input_file).build_message()
     print(msg)

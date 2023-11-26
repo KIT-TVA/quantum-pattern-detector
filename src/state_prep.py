@@ -77,14 +77,15 @@ class BasisEncodingDetector(PatternDetector):
                 del encoded_nums[register]
 
         for reg, index_list in encoded_nums.items():
-            decimal: int = self._bin_index_to_decimal(index_list, reg.size)
+            decimal: int = self.bin_index_to_decimal(index_list, reg.size)
             message += "Basis Encoding: Value {num} is encoded in quantum register {reg}.\n"\
                 .format(num=decimal, reg=reg.name)
             
         return message.strip()
         
 
-    def _bin_index_to_decimal(self, index_list: list, num_of_qubits: int) -> int:
+    @staticmethod
+    def bin_index_to_decimal(index_list: list, num_of_qubits: int) -> int:
 
         binary_list: list = []
         for qubit in range(0, num_of_qubits):
