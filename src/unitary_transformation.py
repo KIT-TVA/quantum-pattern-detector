@@ -6,6 +6,7 @@ from qiskit.dagcircuit import DAGCircuit
 from qiskit.circuit.library import HGate, CXGate, SwapGate
 from io import TextIOWrapper
 
+
 class PhaseEstimationDetector(PatternDetector):
 
     def __init__(self, program: TextIOWrapper) -> None:
