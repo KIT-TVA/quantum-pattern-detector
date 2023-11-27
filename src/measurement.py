@@ -14,7 +14,7 @@ class PostSelectiveMeasurementDetector(PatternDetector):
         self.load_circuit(self.program)
 
     def build_message(self) -> str:
-        
+        found: bool = False
         message: str = ""
         dag: DAGCircuit = circuit_to_dag(self.circuit)
 
@@ -37,8 +37,12 @@ class PostSelectiveMeasurementDetector(PatternDetector):
                         register_name: str = clbit.register.name
 
                         if register_name in measurements.keys():
+                            found = True
                             message += "Post Selective Measurement: Post Selective Measurement"\
                                        "performed on qubit {index}.\n".format(index=measurements[register_name])
                             del measurements[register_name]
+
+        if not found: 
+            message = "Post Selective Measurement: No instance detected."
 
         return message.strip()

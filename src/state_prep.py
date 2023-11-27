@@ -34,7 +34,7 @@ class AngleEncodingDetector(PatternDetector):
                     .format(qubit=location.index, reg=register.name)
         
         if gate_count < self.THRESHOLD * self.circuit.num_qubits:
-            message = ""
+            message = "Angle Encoding: No instance detected."
 
         return message.strip()
 
@@ -55,7 +55,7 @@ class BasisEncodingDetector(PatternDetector):
 
     # Search for Pauli-X gates in the first layer.
     def build_message(self) -> str:
-        
+        found: bool = False
         message: str = ""
         encoded_nums: dict = {}
         dag: DAGCircuit = circuit_to_dag(self.circuit)
@@ -78,8 +78,12 @@ class BasisEncodingDetector(PatternDetector):
 
         for reg, index_list in encoded_nums.items():
             decimal: int = self.bin_index_to_decimal(index_list, reg.size)
+            found = True
             message += "Basis Encoding: Value {num} is encoded in quantum register {reg}.\n"\
                 .format(num=decimal, reg=reg.name)
+            
+        if not found:
+            message = "Basis Encoding: No instance detected."
             
         return message.strip()
         
