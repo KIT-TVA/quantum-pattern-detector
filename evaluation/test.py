@@ -15,7 +15,8 @@ FILE_PATH: list = ["amplitude_estimation",
                    "ghz", 
                    "graph_state", 
                    "grover",
-                   "qaoa"]
+                   "qaoa",
+                   "qft"]
 
 def test_all() -> str:
     path_str: str = parent_dir + "/evaluation/"

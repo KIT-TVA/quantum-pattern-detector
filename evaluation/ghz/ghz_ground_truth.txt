@@ -7,5 +7,4 @@ Uniform superposition:
 Entanglement:
   - Line 6 - 9
   
-Quantum Phase Estimation (implicit):
- - Line 6
+Note: Line 6 is not an intended instance of Quantum Phase Estimation:

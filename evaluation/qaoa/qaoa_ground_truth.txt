@@ -1,5 +1,5 @@
-QAOA for 3 qubits and MAX-CUT problem
----------------------------------------
+Quantum Approximate Optimization Algorithm for 3 qubits and MAX-CUT problem
+-------------------------------------------------------------------------------
 
 Uniform Superposition:
   - Line 5 - 13

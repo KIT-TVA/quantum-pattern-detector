@@ -1,0 +1,7 @@
+Quantum Fourier Transform on 4 qubits
+--------------------------------------
+
+Uniform Superposition:
+  - Line 5 - 17
+
+Note: Line 6 is not an intended instance of quantum qhase estimation.
