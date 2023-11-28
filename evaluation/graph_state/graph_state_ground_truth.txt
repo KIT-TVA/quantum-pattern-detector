@@ -1,0 +1,8 @@
+Graph State for 4 qubits and degree of 2
+-----------------------------------------
+
+Uniform Superposition:
+  - Line 5 - 13
+
+Entanglement:
+  - Line 7 - 15

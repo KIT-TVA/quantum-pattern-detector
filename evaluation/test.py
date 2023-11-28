@@ -10,7 +10,7 @@ from measurement import PostSelectiveMeasurementDetector
 from io import TextIOWrapper
 
 
-FILE_PATH: list = ["amplitude_estimation", "deutsch_jozsa", "ghz", "grover"]
+FILE_PATH: list = ["amplitude_estimation", "deutsch_jozsa", "ghz", "graph_state", "grover"]
 
 def test_all() -> str:
     path_str: str = parent_dir + "/evaluation/"
