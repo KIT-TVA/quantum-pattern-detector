@@ -73,7 +73,7 @@ class BasisEncodingDetector(PatternDetector):
                     encoded_nums[register] = [index]
 
         for register in encoded_nums.copy().keys():
-            if len(encoded_nums[register]) < self.THRESHOLD * register.size:
+            if len(encoded_nums[register]) < self.THRESHOLD * self.circuit.num_qubits:
                 del encoded_nums[register]
 
         for reg, index_list in encoded_nums.items():

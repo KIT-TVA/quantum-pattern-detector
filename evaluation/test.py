@@ -17,7 +17,8 @@ FILE_PATH: list = ["amplitude_estimation",
                    "grover",
                    "qaoa",
                    "qft",
-                   "qft_entangled"]
+                   "qft_entangled",
+                   "quantum_phase_estimation"]
 
 def test_all() -> str:
     path_str: str = parent_dir + "/evaluation/"
@@ -41,5 +42,3 @@ def test_all() -> str:
 
 if __name__ == '__main__':
     print(test_all())
-
-        

@@ -3,8 +3,6 @@
 from qiskit import QuantumCircuit, QuantumRegister
 from qiskit.circuit.library import QFT
 
-import qiskit.qasm2
-
 
 def entangled_qft_circuit(num_qubits: int) -> QuantumCircuit:
     """Returns a quantum circuit implementing the Quantum Fourier Transform algorithm using entangled qubits.
@@ -25,6 +23,3 @@ def entangled_qft_circuit(num_qubits: int) -> QuantumCircuit:
     qc.name = "qftentangled"
 
     return qc
-
-circ = entangled_qft_circuit(4).decompose('QFT')
-print(qiskit.qasm2.dumps(circ))

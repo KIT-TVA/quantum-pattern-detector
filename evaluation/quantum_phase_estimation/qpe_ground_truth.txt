@@ -1,0 +1,10 @@
+Quantum Phase Estimation on 4 qubits
+--------------------------------------
+
+Uniform Superposition:
+  - Line 6 - 15
+
+Entanglement:
+  - Line 15 - 21
+
+Quantum Phase Estimation
