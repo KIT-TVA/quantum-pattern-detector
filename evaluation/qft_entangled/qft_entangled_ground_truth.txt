@@ -1,0 +1,11 @@
+Quantum Fourier Transform with entanglement on 4 qubits
+-------------------------------------------------------
+
+Uniform Superposition:
+  - Line 5 - 5
+  - Line 14 - 17
+
+Entanglement:
+  - Line 6 - 23
+
+Note: Line 6 is not an intended instance of quantum qhase estimation.

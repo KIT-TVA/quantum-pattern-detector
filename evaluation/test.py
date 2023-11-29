@@ -16,14 +16,15 @@ FILE_PATH: list = ["amplitude_estimation",
                    "graph_state", 
                    "grover",
                    "qaoa",
-                   "qft"]
+                   "qft",
+                   "qft_entangled"]
 
 def test_all() -> str:
     path_str: str = parent_dir + "/evaluation/"
     msg: str = ""
 
     for file_str in FILE_PATH:
-        file_path = path_str + file_str + "/" + file_str + ".qasm"
+        file_path: str = path_str + file_str + "/" + file_str + ".qasm"
         input_file: TextIOWrapper = open(file_path)
         msg += file_str + ":" + "\n" + \
                 "---------------------------------" + "\n" + \
