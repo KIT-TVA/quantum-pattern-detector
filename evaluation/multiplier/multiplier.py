@@ -1,8 +1,6 @@
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
 from qiskit.circuit.library import RGQFTMultiplier
 
-import qiskit.qasm2 as q
-
 
 def multiplier_circuit():
     q = QuantumRegister(8,'q')
@@ -26,6 +24,3 @@ def multiplier_circuit():
     circuit.measure(q[7],c[3])
 
     return circuit
-
-circ = multiplier_circuit().decompose('RGQFTMultiplier').decompose('gate_QFT').decompose('gate_IQFT')
-print(q.dumps(circ))

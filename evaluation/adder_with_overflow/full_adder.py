@@ -1,6 +1,5 @@
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
 
-import qiskit.qasm2 as q
 
 def adder_circuit(a_flag = False, b_flag = False, c_in = False) -> QuantumCircuit:
     q = QuantumRegister(5,'q')
@@ -27,6 +26,3 @@ def adder_circuit(a_flag = False, b_flag = False, c_in = False) -> QuantumCircui
     circuit.measure(q[4],c[1])
 
     return circuit
-
-circ = adder_circuit(a_flag=True, b_flag=True, c_in=True)
-print(q.dumps(circ))
