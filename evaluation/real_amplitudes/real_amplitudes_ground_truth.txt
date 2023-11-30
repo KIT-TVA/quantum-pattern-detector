@@ -1,0 +1,7 @@
+Real Amplitudes Ansatz on 3 qubits
+-----------------------------------
+
+Entanglement:
+  - Line 7 - 27
+  
+No Angle Encoding in first layer.
