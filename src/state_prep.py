@@ -47,7 +47,7 @@ class AmplitudeEncodingDetector(PatternDetector):
 
 class BasisEncodingDetector(PatternDetector):
 
-    THRESHOLD: float = 0.5
+    THRESHOLD: float = 0.3
     
     def __init__(self, program: TextIOWrapper) -> None:
         super().__init__(program)

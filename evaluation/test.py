@@ -10,7 +10,9 @@ from measurement import PostSelectiveMeasurementDetector
 from io import TextIOWrapper
 
 
-FILE_PATH: list = ["amplitude_estimation", 
+FILE_PATH: list = ["adder_with_overflow",
+                   "adder_without_overflow",
+                   "amplitude_estimation", 
                    "deutsch_jozsa", 
                    "ghz", 
                    "graph_state", 
