@@ -1,0 +1,10 @@
+Shor's algorithm for factorizing the number 3
+----------------------------------------------
+
+Uniform Superposition:
+  - Line 278 - 281
+  
+Entanglement:
+  - Line 283 - 292
+  
+Quantum Phase Estimation
