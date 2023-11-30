@@ -22,7 +22,8 @@ FILE_PATH: list = ["amplitude_estimation",
                    "quantum_walk",
                    "real_amplitudes",
                    "shor",
-                   "su2"]
+                   "su2",
+                   "variational_quantum_eigensolver"]
 
 def test_all() -> str:
     path_str: str = parent_dir + "/evaluation/"
