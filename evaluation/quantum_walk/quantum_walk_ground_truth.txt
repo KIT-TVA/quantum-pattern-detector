@@ -1,0 +1,13 @@
+Quantum Walk for 4 qubits
+--------------------------
+
+Uniform superposition:
+  - Line 6 - 7
+  - Line 15 - 16
+  - Line 21 - 23
+  - Line 31 - 33
+  
+Entanglement:
+  - Line 8 - 29
+  
+Uncompute (?), No Quantum Phase Estimation
