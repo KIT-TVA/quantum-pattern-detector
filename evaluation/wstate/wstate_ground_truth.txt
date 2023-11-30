@@ -1,0 +1,7 @@
+Circuit for creating a W-State on 3 qubits
+-------------------------------------------
+
+Entanglement:
+  - Line 10 - 15
+  
+No angle encoding!
