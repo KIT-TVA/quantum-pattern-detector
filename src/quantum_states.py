@@ -120,7 +120,8 @@ class UniformSuperpositionDetector(PatternDetector):
                 shots: int = sum(counts.values())
 
                 for key, value in counts.items():
-                    prob[int(key, 2)] = value / shots
+                    state: str = key.replace(" ", "")
+                    prob[int(state, 2)] = value / shots
 
                 has_measurement = False
 

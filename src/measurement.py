@@ -38,7 +38,7 @@ class PostSelectiveMeasurementDetector(PatternDetector):
 
                         if register_name in measurements.keys():
                             found = True
-                            message += "Post Selective Measurement: Post Selective Measurement"\
+                            message += "Post Selective Measurement: Post Selective Measurement "\
                                        "performed on qubit {index}.\n".format(index=measurements[register_name])
                             del measurements[register_name]
 
