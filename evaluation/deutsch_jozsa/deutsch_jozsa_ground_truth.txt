@@ -2,6 +2,6 @@ Deutsch Jozsa for 4 qubits and a balanced oracle
 --------------------------------------------------
 
 Uniform superposition:
-  - Line 5 - 20
+  - Line 5 - 16
   
-Oracle, Uncompute (?)
+Oracle, Uncompute

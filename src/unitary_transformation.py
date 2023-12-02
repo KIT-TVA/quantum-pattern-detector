@@ -1,8 +1,9 @@
 from abstract_detector import PatternDetector
 
+from qiskit import QuantumCircuit
 from qiskit.circuit.quantumcircuit import BitLocations, Qubit
-from qiskit.converters import circuit_to_dag
-from qiskit.dagcircuit import DAGCircuit
+from qiskit.converters import circuit_to_dag, dag_to_circuit
+from qiskit.dagcircuit import DAGCircuit, DAGOpNode
 from qiskit.circuit.library import HGate, CXGate, SwapGate
 from io import TextIOWrapper
 
@@ -102,6 +103,46 @@ class UncomputeDetector(PatternDetector):
 
     def build_message(self) -> str:
 
+        if self.detect_circuit_struc() or self.detect_inverse_subcircuit():
+            return "Uncompute: Instance of Uncompute detected."
+
+        return "Uncompute: No instance detected."
+    
+    # Search for inverse subcircuits.
+    def detect_inverse_subcircuit(self) -> bool:
+        self.circuit.remove_final_measurements()
+        depth: int = self.circuit.depth()
+        step: int = 0
+        max_step: int = depth // 2
+
+        while step < max_step:
+            window_start: int = 0
+            window_end: int  = window_start + step
+            compare_start: int = window_end + 1
+            compare_end: int = compare_start + step
+
+            while compare_end < depth:
+                while compare_end < depth:
+                    window_circ: QuantumCircuit = self.get_subcircuit(window_start, window_end)
+                    compare_circ: QuantumCircuit = self.get_subcircuit(compare_start, compare_end)
+
+                    if window_circ == compare_circ.inverse():
+                        return True
+
+                    compare_start += 1
+                    compare_end += 1
+
+                window_start += 1
+                window_end += 1
+                compare_start = window_end + 1
+                compare_end = compare_start + step
+
+            step += 1
+        
+        return False
+
+    # Search for typical circuit structure.
+    def detect_circuit_struc(self) -> bool:
         dag: DAGCircuit = circuit_to_dag(self.circuit)
 
         # Stores all bit pairs where a cx gate has been applied to.
@@ -141,6 +182,23 @@ class UncomputeDetector(PatternDetector):
                             del cx_nodes[key]
 
                 if added and not cx_nodes:
-                    return "Uncompute: Instance of Uncompute detected."
+                    return True
 
-        return "Uncompute: No instance detected."
+        return False
+    
+    # Returns subcircuit from layer start to layer end (inclusive).
+    def get_subcircuit(self, start: int, end: int) -> QuantumCircuit:
+        dag: DAGCircuit = circuit_to_dag(self.circuit)
+        layers: list = list(dag.multigraph_layers())
+
+        for layer in layers[:start+1]:
+            for node in layer:
+                if isinstance(node, DAGOpNode):
+                    dag.remove_op_node(node)
+
+        for layer in layers[end+2:-1]:
+            for node in layer:
+                if isinstance(node, DAGOpNode):
+                    dag.remove_op_node(node)
+                        
+        return dag_to_circuit(dag)

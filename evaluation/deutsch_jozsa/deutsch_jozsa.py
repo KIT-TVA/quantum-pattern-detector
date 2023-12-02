@@ -1,78 +1,35 @@
 # Code adapted from https://learn.qiskit.org/course/ch-algorithms/deutsch-jozsa-algorithm
 
-import numpy as np
-import qiskit.qasm2
-from qiskit import QuantumCircuit
+from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
 
-def dj_oracle(case: str, n: int) -> QuantumCircuit:
-    # plus one output qubit
-    oracle_qc = QuantumCircuit(n + 1)
+def dj_circle() -> QuantumCircuit:
+    
+    q = QuantumRegister(3,"q")
+    c = ClassicalRegister(3,"c")
+    circuit = QuantumCircuit(q,c)
 
-    if case == "balanced":
-        np.random.seed(10)
-        b_str = ""
-        for _ in range(n):
-            b = np.random.randint(0, 2)
-            b_str = b_str + str(b)
+    circuit.h(q[0])
+    circuit.h(q[1])
+    circuit.barrier(q)
+    
+    circuit.x(q[2])
+    circuit.h(q[2])
+    circuit.barrier(q)
 
-        for qubit in range(len(b_str)):
-            if b_str[qubit] == "1":
-                oracle_qc.x(qubit)
+    circuit.cx(q[0], q[2])
+    circuit.cx(q[1], q[2])
+    circuit.barrier(q)
 
-        for qubit in range(n):
-            oracle_qc.cx(qubit, n)
+    circuit.h(q[2])
+    circuit.x(q[2])
+    circuit.barrier(q)
 
-        for qubit in range(len(b_str)):
-            if b_str[qubit] == "1":
-                oracle_qc.x(qubit)
+    circuit.h(q[0])
+    circuit.h(q[1])
+    circuit.barrier(q)
+    circuit.measure(q[0], c[0])
+    circuit.measure(q[1], c[1])
+    circuit.barrier(q)
 
-    if case == "constant":
-        output = np.random.randint(2)
-        if output == 1:
-            oracle_qc.x(n)
-
-    oracle_gate = oracle_qc.to_gate()
-    oracle_gate.name = "Oracle"  # To show when we display the circuit
-    return oracle_gate
-
-
-def dj_algorithm(oracle: QuantumCircuit, n: int) -> QuantumCircuit:
-    dj_circuit = QuantumCircuit(n + 1, n)
-
-    dj_circuit.x(n)
-    dj_circuit.h(n)
-
-    for qubit in range(n):
-        dj_circuit.h(qubit)
-
-    dj_circuit.append(oracle, range(n + 1))
-
-    for qubit in range(n):
-        dj_circuit.h(qubit)
-
-    dj_circuit.barrier()
-    for i in range(n):
-        dj_circuit.measure(i, i)
-
-    return dj_circuit
-
-
-def dj_circuit(n: int, balanced: bool = True) -> QuantumCircuit:
-    """Returns a quantum circuit implementing the Deutsch-Josza algorithm.
-
-    Keyword arguments:
-    n -- number of qubits of the returned quantum circuit
-    balanced -- True for a balanced and False for a constant oracle
-    """
-
-    oracle_mode = "balanced" if balanced else "constant"
-    n = n - 1  # because of ancilla qubit
-    oracle_gate = dj_oracle(oracle_mode, n)
-    qc = dj_algorithm(oracle_gate, n)
-    qc.name = "dj"
-
-    return qc
-
-circuit = dj_circuit(3).decompose('Oracle')
-print(circuit)
-print(qiskit.qasm2.dumps(circuit))
+    return circuit
+    

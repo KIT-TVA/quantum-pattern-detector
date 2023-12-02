@@ -9,5 +9,6 @@ Uniform Superposition:
 Entanglement: 
   - Line 11 - 33
  
+Uncompute
 
 Oracle, Phase Shift, Amlitude Amplification

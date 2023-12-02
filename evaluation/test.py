@@ -46,7 +46,7 @@ def test_all() -> str:
                 PhaseEstimationDetector(input_file).build_message() + "\n" + \
                 UncomputeDetector(input_file).build_message() + "\n" + \
                 PostSelectiveMeasurementDetector(input_file).build_message() + "\n\n"
-        
+
     return msg.strip()
 
 

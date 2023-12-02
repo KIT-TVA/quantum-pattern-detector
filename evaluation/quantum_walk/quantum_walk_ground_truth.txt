@@ -10,4 +10,4 @@ Uniform superposition:
 Entanglement:
   - Line 8 - 29
   
-Uncompute (?), No Quantum Phase Estimation
+Uncompute, No Quantum Phase Estimation
