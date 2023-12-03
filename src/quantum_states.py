@@ -1,3 +1,4 @@
+from typing import Any
 from utils import FileReader, get_combinations, convert_to_int
 from abstract_detector import PatternDetector
 
@@ -18,9 +19,10 @@ class EntanglementDetector(PatternDetector):
     def __init__(self, program: TextIOWrapper) -> None:
         super().__init__(program)
 
-    def build_message(self) -> str:
+    def detect_pattern(self) -> list[(int, int)]:
+        pattern_instances: list[(int, int)] = []
+        current_start_line: int = -1
         is_entangled: bool = True
-        message: str = ""
         reader: FileReader = FileReader(self.program)
         program_len: int = len(self.program.readlines())
         self.program.seek(0)
@@ -32,8 +34,6 @@ class EntanglementDetector(PatternDetector):
 
             if self.circuit.depth() == 0:
                 if is_entangled:
-                    message += "Creating Entanglement: Quantum state is not entangled from line {ln} onwards.\n"\
-                        .format(ln=line_num + 1)
                     is_entangled = False
                 continue
 
@@ -57,8 +57,7 @@ class EntanglementDetector(PatternDetector):
                 # The quantum state is entangled iff the Schmidt-rank is greater than 1.
                 if len(schmidt_coefficents) > 1:
                     if not is_entangled:
-                        message += "Creating Entanglement: Quantum state is entangled from line {ln} onwards.\n"\
-                            .format(ln=line_num + 1)
+                        current_start_line = line_num + 1
                         is_entangled = True
                     found = True
                     break
@@ -68,23 +67,36 @@ class EntanglementDetector(PatternDetector):
                 continue
 
             if is_entangled:
+                pattern_instances.append((current_start_line, line_num))
+                current_start_line = -1
                 is_entangled = False
-                message += "Creating Entanglement: Quantum state is not entangled from line {ln} onwards.\n"\
-                    .format(ln=line_num + 1)
+                
+        if current_start_line != -1:
+            pattern_instances.append((current_start_line, program_len))
 
-        return message.strip()
+        return pattern_instances
 
+    def build_message(self) -> str:
+        message: str = ""
+
+        for instance in self.detect_pattern():
+            message += ("Creating Entanglement: Quantum state is entangled "
+                        "from line {start_ln} to {end_ln}.\n".format(start_ln=instance[0], end_ln=instance[1]))
+            
+        return message
+        
     
+
 class UniformSuperpositionDetector(PatternDetector):
 
     def __init__(self, program: TextIOWrapper) -> None:
         super().__init__(program)
         self.load_circuit(self.program)
 
-    def build_message(self) -> str:
-
+    def detect_pattern(self) -> list[(int, int)]:
+        pattern_instances: list[(int, int)] = []
+        current_start_line: int = -1
         in_ufs: bool = True
-        message: str = ""
         reader: FileReader = FileReader(self.program)
         program_len: int = len(self.program.readlines())
         self.program.seek(0)
@@ -97,8 +109,6 @@ class UniformSuperpositionDetector(PatternDetector):
             # Circuit with depth of 0 cannot be in uniform superposition.
             if self.circuit.depth() == 0:
                 if in_ufs:
-                    message += ("Uniform Superposition: Quantum state is not in uniform superposition"
-                                "from line {ln} onwards.\n").format(ln=line_num + 1)
                     in_ufs = False
                 continue
 
@@ -154,8 +164,7 @@ class UniformSuperpositionDetector(PatternDetector):
                     self.in_ufs(rounded_prob, convert_to_int(filtered_states_1)):
 
                     if not in_ufs:
-                        message += ("Uniform Superposition: Quantum state is in uniform superposition"
-                                    "from line {ln} onwards.\n").format(ln=line_num + 1)
+                        current_start_line = line_num + 1
                         in_ufs = True
 
                     found = True
@@ -167,10 +176,22 @@ class UniformSuperpositionDetector(PatternDetector):
 
             if in_ufs:
                 in_ufs = False
-                message += ("Uniform Superposition: Quantum state is not in uniform superposition"
-                            "from line {ln} onwards.\n").format(ln=line_num + 1)
+                pattern_instances.append((current_start_line, line_num))
+                current_start_line = -1
+        
+        if current_start_line != -1:
+            pattern_instances.append((current_start_line, program_len))
 
-        return message.strip()
+        return pattern_instances
+
+    def build_message(self) -> str:
+        message: str = ""
+
+        for instance in self.detect_pattern():
+            message += ("Uniform Superposition: Quantum system is in uniform superposition "
+                        "from line {start_ln} to {end_ln}.\n".format(start_ln=instance[0], end_ln=instance[1]))
+            
+        return message
 
     @staticmethod
     def calc_all_binary_combinations(n: int) -> list:

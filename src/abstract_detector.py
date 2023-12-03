@@ -2,6 +2,7 @@ import qiskit.qasm2
 
 from abc import ABC, abstractmethod
 from io import TextIOWrapper
+from typing import Any
 from qiskit import QuantumCircuit
 
 class PatternDetector(ABC):
@@ -24,6 +25,10 @@ class PatternDetector(ABC):
             custom_instructions=qiskit.qasm2.LEGACY_CUSTOM_INSTRUCTIONS,
             custom_classical=qiskit.qasm2.LEGACY_CUSTOM_CLASSICAL
         )
+
+    @abstractmethod
+    def detect_pattern(self) -> Any:
+        pass
 
     @abstractmethod
     def build_message(self) -> str:
