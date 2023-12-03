@@ -50,11 +50,11 @@ def all_messages() -> str:
 
 def all_metrics() -> str:
     return (metrics_ufs() + \
-            metrics_entanglement() + \
-            metrics_basis_encoding() + \
-            metrics_angle_encoding() + \
-            metrics_qpe() + \
-            metrics_uncompute() + \
+            metrics_entanglement() + "\n" + \
+            metrics_basis_encoding() + "\n" + \
+            metrics_angle_encoding() + "\n" + \
+            metrics_qpe() + "\n" + \
+            metrics_uncompute() + "\n" + \
             metrics_psm()).strip()
 
 def metrics_ufs() -> str:
