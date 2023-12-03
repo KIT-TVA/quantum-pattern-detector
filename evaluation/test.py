@@ -38,7 +38,7 @@ def all_messages() -> str:
         input_file: TextIOWrapper = open(get_file_path(file_str))
         msg += file_str + ":" + "\n" + \
                 "---------------------------------" + "\n" + \
-                AngleEncodingDetector(input_file).build_message() + "\n"
+                UncomputeDetector(input_file).build_message() + "\n"
 
     return msg.strip()
 
@@ -148,9 +148,65 @@ def metrics_angle_encoding() -> str:
          "variational_quantum_eigensolver": True,
          "wstate": False}
     
-    metrics: (float, float, float) = metrics_for_instance_detectors(ground_truth, BasisEncodingDetector, use_list=True)
+    metrics: (float, float, float) = metrics_for_instance_detectors(ground_truth, AngleEncodingDetector, use_list=True)
 
     return "Angle encoding detector\n" + \
+           "----------------------------------\n" +\
+           "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
+
+def metrics_qpe() -> str: 
+    ground_truth: dict[str, bool] = \
+        {"adder_with_overflow": False,
+         "adder_without_overflow": False,
+         "amplitude_estimation": True, 
+         "deutsch_jozsa": False, 
+         "ghz": False, 
+         "graph_state": False, 
+         "grover": False,
+         "hhl": True,
+         "multiplier": False,
+         "qaoa": False,
+         "qft": False,
+         "qft_entangled": False,
+         "quantum_phase_estimation": True,
+         "quantum_walk": False,
+         "real_amplitudes": False,
+         "shor": True,
+         "su2": False,
+         "variational_quantum_eigensolver": False,
+         "wstate": False}
+    
+    metrics: (float, float, float) = metrics_for_instance_detectors(ground_truth, PhaseEstimationDetector)
+
+    return "Quantum Phase Estimation detector\n" + \
+           "----------------------------------\n" +\
+           "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
+
+def metrics_uncompute() -> str: 
+    ground_truth: dict[str, bool] = \
+        {"adder_with_overflow": False,
+         "adder_without_overflow": False,
+         "amplitude_estimation": False, 
+         "deutsch_jozsa": True, 
+         "ghz": False, 
+         "graph_state": False, 
+         "grover": True,
+         "hhl": True,
+         "multiplier": False,
+         "qaoa": False,
+         "qft": False,
+         "qft_entangled": False,
+         "quantum_phase_estimation": False,
+         "quantum_walk": True,
+         "real_amplitudes": False,
+         "shor": False,
+         "su2": False,
+         "variational_quantum_eigensolver": False,
+         "wstate": False}
+    
+    metrics: (float, float, float) = metrics_for_instance_detectors(ground_truth, UncomputeDetector)
+
+    return "Uncompute detector\n" + \
            "----------------------------------\n" +\
            "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
 
@@ -230,4 +286,4 @@ def metrics_for_instance_detectors(
 
 
 if __name__ == '__main__':
-    print(metrics_angle_encoding())
+    print(metrics_uncompute())

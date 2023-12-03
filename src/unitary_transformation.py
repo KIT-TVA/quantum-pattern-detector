@@ -1,3 +1,4 @@
+from typing import Any
 from abstract_detector import PatternDetector
 
 from qiskit import QuantumCircuit
@@ -15,7 +16,7 @@ class PhaseEstimationDetector(PatternDetector):
         self.load_circuit(self.program)
 
     # Search for the special circuit used for PhaseEstimation.
-    def build_message(self) -> str:
+    def detect_pattern(self) ->  bool:
         dag: DAGCircuit = circuit_to_dag(self.circuit)
 
         # Stores bits in unifrom superposition with the corresponding gates.
@@ -90,9 +91,17 @@ class PhaseEstimationDetector(PatternDetector):
             # If all ancillary bits are used, an instance of the pattern has been found.
             for value in hadamards.values():
                 if not value:
-                    return "Quantum Phase Estimation: Instance of Quantum Phase Estimation detected."
+                    return True
                 
-        return "Quantum Phase Estimation: No instance detected."
+        return False
+
+    
+    def build_message(self) -> str:
+        
+        if self.detect_pattern():
+            return "Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.\n"
+
+        return "Quantum Phase Estimation: No instance detected.\n"
 
 
 class UncomputeDetector(PatternDetector):
@@ -101,12 +110,15 @@ class UncomputeDetector(PatternDetector):
         super().__init__(program)
         self.load_circuit(self.program)
 
+    def detect_pattern(self) -> bool:
+        return self.detect_circuit_struc() or self.detect_inverse_subcircuit()
+
     def build_message(self) -> str:
 
-        if self.detect_circuit_struc() or self.detect_inverse_subcircuit():
-            return "Uncompute: Instance of Uncompute detected."
+        if self.detect_pattern():
+            return "Uncompute: Instance of Uncompute detected.\n"
 
-        return "Uncompute: No instance detected."
+        return "Uncompute: No instance detected.\n"
     
     # Search for inverse subcircuits.
     def detect_inverse_subcircuit(self) -> bool:

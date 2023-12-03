@@ -6,7 +6,6 @@ from qiskit.circuit.library import XGate, RYGate
 from qiskit.circuit.quantumcircuit import BitLocations, Qubit
 from qiskit.converters import circuit_to_dag
 from qiskit.dagcircuit import DAGCircuit
-from math import pi
 from io import TextIOWrapper
 
 
