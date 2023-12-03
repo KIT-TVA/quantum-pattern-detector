@@ -2,6 +2,7 @@ import os, sys
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir + "/src")
 
+from abstract_detector import PatternDetector
 from state_prep import AngleEncodingDetector, BasisEncodingDetector
 from quantum_states import EntanglementDetector, UniformSuperpositionDetector
 from unitary_transformation import PhaseEstimationDetector, UncomputeDetector
@@ -37,7 +38,7 @@ def all_messages() -> str:
         input_file: TextIOWrapper = open(get_file_path(file_str))
         msg += file_str + ":" + "\n" + \
                 "---------------------------------" + "\n" + \
-                EntanglementDetector(input_file).build_message() + "\n"
+                AngleEncodingDetector(input_file).build_message() + "\n"
 
     return msg.strip()
 
@@ -69,7 +70,7 @@ def metrics_ufs() -> str:
            "----------------------------------\n" +\
            "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
 
-def metrics_entanglement() -> (float, float, float):
+def metrics_entanglement() -> str:
     ground_truth: dict[str, list[(int, int)]] = \
         {"adder_with_overflow": [],
          "adder_without_overflow": [],
@@ -91,9 +92,65 @@ def metrics_entanglement() -> (float, float, float):
          "variational_quantum_eigensolver": [(8,19)],
          "wstate": [(10,15)]}
     
-    metrics: (int, int, int) = metrics_for_line_detectors(ground_truth, EntanglementDetector)
+    metrics: (float, float, float) = metrics_for_line_detectors(ground_truth, EntanglementDetector)
 
     return "Entanglement detector\n" + \
+           "----------------------------------\n" +\
+           "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
+
+def metrics_basis_encoding() -> str: 
+    ground_truth: dict[str, bool] = \
+        {"adder_with_overflow": True,
+         "adder_without_overflow": True,
+         "amplitude_estimation": False, 
+         "deutsch_jozsa": False, 
+         "ghz": False, 
+         "graph_state": False, 
+         "grover": False,
+         "hhl": False,
+         "multiplier": True,
+         "qaoa": False,
+         "qft": False,
+         "qft_entangled": False,
+         "quantum_phase_estimation": False,
+         "quantum_walk": False,
+         "real_amplitudes": False,
+         "shor": False,
+         "su2": False,
+         "variational_quantum_eigensolver": False,
+         "wstate": False}
+    
+    metrics: (float, float, float) = metrics_for_instance_detectors(ground_truth, BasisEncodingDetector, use_list=True)
+
+    return "Basis encoding detector\n" + \
+           "----------------------------------\n" +\
+           "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
+
+def metrics_angle_encoding() -> str: 
+    ground_truth: dict[str, bool] = \
+        {"adder_with_overflow": False,
+         "adder_without_overflow": False,
+         "amplitude_estimation": False, 
+         "deutsch_jozsa": False, 
+         "ghz": False, 
+         "graph_state": False, 
+         "grover": False,
+         "hhl": False,
+         "multiplier": False,
+         "qaoa": False,
+         "qft": False,
+         "qft_entangled": False,
+         "quantum_phase_estimation": False,
+         "quantum_walk": False,
+         "real_amplitudes": True,
+         "shor": False,
+         "su2": True,
+         "variational_quantum_eigensolver": True,
+         "wstate": False}
+    
+    metrics: (float, float, float) = metrics_for_instance_detectors(ground_truth, BasisEncodingDetector, use_list=True)
+
+    return "Angle encoding detector\n" + \
            "----------------------------------\n" +\
            "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
 
@@ -103,15 +160,19 @@ def get_file_path(file_str: str) -> str:
     
     return file_path
 
-def calculate_metrics(tp: int, fp: int, fn: int) -> (int, int, int):
+def calculate_metrics(tp: int, fp: int, fn: int) -> (float, float, float):
 
     precision: float = tp / (tp + fp)
     recall: float = tp / (tp + fn)
     f_measure: float = (2 * precision * recall) / (precision + recall)
 
-    return (precision, recall, f_measure)
+    return (round(precision, 4), round(recall, 4), round(f_measure, 4))
 
-def metrics_for_line_detectors(ground_truth: dict[str, list[(int, int)]], detector: type) -> (int, int, int):
+def metrics_for_line_detectors(
+        ground_truth: dict[str, list[(int, int)]], 
+        detector: PatternDetector
+    ) -> (float, float, float):
+    
     true_positives: int = 0
     false_positives: int = 0
     false_negatives: int = 0
@@ -136,6 +197,37 @@ def metrics_for_line_detectors(ground_truth: dict[str, list[(int, int)]], detect
 
     return calculate_metrics(true_positives, false_positives, false_negatives)
 
+def metrics_for_instance_detectors(
+        ground_truth: dict[str, bool], 
+        detector: PatternDetector, 
+        use_list=False
+    ) -> (float, float, float):
+
+    true_positives: int = 0
+    false_positives: int = 0
+    false_negatives: int = 0
+
+    detected: bool = False
+
+    for key, value in ground_truth.items():
+        input_file: TextIOWrapper = open(get_file_path(key))
+
+        if use_list:
+            detected = (len(detector(input_file).detect_pattern()) != 0)
+        else:
+            detected = detector(input_file).detect_pattern()
+
+        if value == detected:
+            true_positives += 1
+
+        if not value and detected:
+            false_positives += 1
+
+        if value and not detected: 
+            false_negatives += 1
+
+    return calculate_metrics(true_positives, false_positives, false_negatives)
+
 
 if __name__ == '__main__':
-    print(metrics_entanglement())
+    print(metrics_angle_encoding())

@@ -1,6 +1,7 @@
+from typing import Any
 from abstract_detector import PatternDetector
 
-from qiskit import QuantumRegister
+from qiskit import QuantumRegister, QuantumCircuit
 from qiskit.circuit.library import XGate, RYGate
 from qiskit.circuit.quantumcircuit import BitLocations, Qubit
 from qiskit.converters import circuit_to_dag
@@ -17,26 +18,29 @@ class AngleEncodingDetector(PatternDetector):
         super().__init__(program)
         self.load_circuit(self.program)
 
+    def detect_pattern(self) -> list[(int, str)]:
+        instances: list[(int, str)] = find_gates_in_first_layer(RYGate(0).name, self.circuit)
+            
+        if len(instances) < self.THRESHOLD * self.circuit.num_qubits:
+            return []
+            
+        return instances
+
     # Search for R_y gates in the first layer.
     def build_message(self) -> str:
-        message: str = ""
-        gate_count: int = 0
-        dag: DAGCircuit = circuit_to_dag(self.circuit)
+        message = ""
+        instances: list[(int, str)] = self.detect_pattern()
 
-        for node in dag.front_layer():
-            # Angle has to satisfy normalization constraint.
-            if node.name == RYGate(0).name and node.op.params[0] < pi:
-                gate_count += 1
-                qubit: Qubit = node.qargs[0]
-                location: BitLocations = self.circuit.find_bit(qubit)
-                register: QuantumRegister = location.registers[0][0]
-                message += "Angle Encoding: Qubit {qubit} in quantum register {reg} is used for angle encoding.\n"\
-                    .format(qubit=location.index, reg=register.name)
+        if not instances:
+            return "Angle Encoding: No instance found.\n"
         
-        if gate_count < self.THRESHOLD * self.circuit.num_qubits:
-            message = "Angle Encoding: No instance detected."
+        message = "Angle Encoding: Instance of Angle Encoding detected.\n"
 
-        return message.strip()
+        for instance in instances:
+            message += ("Angle Encoding: Qubit {q} of register {r} "
+                        "is used for Basis Encoding.\n".format(q=instance[0], r=instance[1]))
+            
+        return message
 
 
 class AmplitudeEncodingDetector(PatternDetector):
@@ -54,50 +58,41 @@ class BasisEncodingDetector(PatternDetector):
         self.load_circuit(self.program)
 
     # Search for Pauli-X gates in the first layer.
+    def detect_pattern(self) -> list[(int, str)]:
+        instances: list[(int, str)] = find_gates_in_first_layer(XGate().name, self.circuit)
+            
+        if len(instances) < self.THRESHOLD * self.circuit.num_qubits:
+            return []
+            
+        return instances
+
+
     def build_message(self) -> str:
-        found: bool = False
-        message: str = ""
-        encoded_nums: dict = {}
-        dag: DAGCircuit = circuit_to_dag(self.circuit)
+        message = ""
+        instances: list[(int, str)] = self.detect_pattern()
 
-        for node in dag.front_layer():
-            if node.name == XGate().name:
-                qubit: Qubit = node.qargs[0]
-                location: BitLocations = self.circuit.find_bit(qubit)
-                register: QuantumRegister = location.registers[0][0]
-                index: int = location.registers[0][1]
-                
-                if register in encoded_nums:
-                    encoded_nums[register].append(index)
-                else:
-                    encoded_nums[register] = [index]
-
-        for register in encoded_nums.copy().keys():
-            if len(encoded_nums[register]) < self.THRESHOLD * self.circuit.num_qubits:
-                del encoded_nums[register]
-
-        for reg, index_list in encoded_nums.items():
-            decimal: int = self.bin_index_to_decimal(index_list, reg.size)
-            found = True
-            message += "Basis Encoding: Value {num} is encoded in quantum register {reg}.\n"\
-                .format(num=decimal, reg=reg.name)
-            
-        if not found:
-            message = "Basis Encoding: No instance detected."
-            
-        return message.strip()
+        if not instances:
+            return "Basis Encoding: No instance found.\n"
         
+        message = "Basis Encoding: Instance of Basis Encoding detected.\n"
 
-    @staticmethod
-    def bin_index_to_decimal(index_list: list, num_of_qubits: int) -> int:
+        for instance in instances:
+            message += ("Basis Encoding: Qubit {q} of register {r} "
+                        "is used for Basis Encoding.\n".format(q=instance[0], r=instance[1]))
+            
+        return message
 
-        binary_list: list = []
-        for qubit in range(0, num_of_qubits):
-            if qubit in index_list:
-                binary_list.append(1)
-            else:
-                binary_list.append(0)
 
-        binary_list.reverse()
-        
-        return sum(val*(2**idx) for idx, val in enumerate(binary_list))
+def find_gates_in_first_layer(gate_name: str, circuit: QuantumCircuit) -> list[(int, str)]:
+    instances: list[(int, str)] = []
+    dag: DAGCircuit = circuit_to_dag(circuit)
+
+    for node in dag.front_layer():
+        if node.name == gate_name:
+            qubit: Qubit = node.qargs[0]
+            location: BitLocations = circuit.find_bit(qubit)
+            register: QuantumRegister = location.registers[0][0]
+
+            instances.append((location.index, register.name))
+
+    return instances

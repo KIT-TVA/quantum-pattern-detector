@@ -4,4 +4,4 @@ SU(2) circuit on three qubits
 Entanglement:
   - Line 9 - 30
   
-Angle Encoding (?)
+Angle Encoding 
