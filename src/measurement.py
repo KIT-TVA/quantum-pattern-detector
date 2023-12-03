@@ -1,3 +1,4 @@
+from typing import Any
 from abstract_detector import PatternDetector
 
 from qiskit.circuit.library import Measure
@@ -13,9 +14,9 @@ class PostSelectiveMeasurementDetector(PatternDetector):
         super().__init__(program)
         self.load_circuit(self.program)
 
-    def build_message(self) -> str:
+    def detect_pattern(self) -> list[int]:
         found: bool = False
-        message: str = ""
+        instances: list[int] = []
         dag: DAGCircuit = circuit_to_dag(self.circuit)
 
         # key: Target register for measurement
@@ -38,11 +39,26 @@ class PostSelectiveMeasurementDetector(PatternDetector):
 
                         if register_name in measurements.keys():
                             found = True
-                            message += "Post Selective Measurement: Post Selective Measurement "\
-                                       "performed on qubit {index}.\n".format(index=measurements[register_name])
+                            instances.append(measurements[register_name])
                             del measurements[register_name]
 
         if not found: 
-            message = "Post Selective Measurement: No instance detected."
+            return []
 
-        return message.strip()
+        return instances
+
+
+    def build_message(self) -> str:
+        message = ""
+        instances: list[int] = self.detect_pattern()
+
+        if not instances:
+            return "Post Selective Measurement: No instance found.\n"
+        
+        message = "Post Selective Measurement: Instance of Post Selective Measurement detected.\n"
+
+        for instance in instances:
+            message += ("Post Selective Measurement: Post Selective Measurement "\
+                        "performed on qubit {index}.\n".format(index=instance))
+            
+        return message

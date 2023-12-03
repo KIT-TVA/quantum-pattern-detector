@@ -38,9 +38,24 @@ def all_messages() -> str:
         input_file: TextIOWrapper = open(get_file_path(file_str))
         msg += file_str + ":" + "\n" + \
                 "---------------------------------" + "\n" + \
-                UncomputeDetector(input_file).build_message() + "\n"
+                UniformSuperpositionDetector(input_file).build_message() + "\n" + \
+                EntanglementDetector(input_file).build_message() + "\n" + \
+                BasisEncodingDetector(input_file).build_message() + "\n" + \
+                AngleEncodingDetector(input_file).build_message() + "\n" + \
+                PhaseEstimationDetector(input_file).build_message() + "\n" + \
+                UncomputeDetector(input_file).build_message() + "\n" + \
+                PostSelectiveMeasurementDetector(input_file).build_message() + "\n\n"
 
     return msg.strip()
+
+def all_metrics() -> str:
+    return (metrics_ufs() + \
+            metrics_entanglement() + \
+            metrics_basis_encoding() + \
+            metrics_angle_encoding() + \
+            metrics_qpe() + \
+            metrics_uncompute() + \
+            metrics_psm()).strip()
 
 def metrics_ufs() -> str:
     ground_truth: dict[str, list[(int, int)]] = \
@@ -210,6 +225,38 @@ def metrics_uncompute() -> str:
            "----------------------------------\n" +\
            "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
 
+def metrics_psm() -> str: 
+    ground_truth: dict[str, bool] = \
+        {"adder_with_overflow": False,
+         "adder_without_overflow": False,
+         "amplitude_estimation": False, 
+         "deutsch_jozsa": False, 
+         "ghz": False, 
+         "graph_state": False, 
+         "grover": False,
+         "hhl": True,
+         "multiplier": False,
+         "qaoa": False,
+         "qft": False,
+         "qft_entangled": False,
+         "quantum_phase_estimation": False,
+         "quantum_walk": False,
+         "real_amplitudes": False,
+         "shor": False,
+         "su2": False,
+         "variational_quantum_eigensolver": False,
+         "wstate": False}
+    
+    metrics: (float, float, float) = metrics_for_instance_detectors(
+                                        ground_truth, 
+                                        PostSelectiveMeasurementDetector, 
+                                        use_list=True
+                                    )
+
+    return "Post Selctive Measurement detector\n" + \
+           "----------------------------------\n" +\
+           "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
+
 def get_file_path(file_str: str) -> str:
     path_str: str = parent_dir + "/evaluation/"
     file_path: str = path_str + file_str + "/" + file_str + ".qasm"
@@ -286,4 +333,4 @@ def metrics_for_instance_detectors(
 
 
 if __name__ == '__main__':
-    print(metrics_uncompute())
+    print(all_metrics())
