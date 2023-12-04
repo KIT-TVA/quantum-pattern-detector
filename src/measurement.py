@@ -21,7 +21,7 @@ class PostSelectiveMeasurementDetector(PatternDetector):
 
         # key: Target register for measurement
         # value: Index of qubit to measure
-        measurements: dict = {}
+        measurements: dict[str, int] = {}
 
         for layer in dag.layers():
             for node in layer['graph'].front_layer():

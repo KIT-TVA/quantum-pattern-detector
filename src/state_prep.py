@@ -17,8 +17,8 @@ class AngleEncodingDetector(PatternDetector):
         super().__init__(program)
         self.load_circuit(self.program)
 
-    def detect_pattern(self) -> list[(int, str)]:
-        instances: list[(int, str)] = find_gates_in_first_layer(RYGate(0).name, self.circuit)
+    def detect_pattern(self) -> list[tuple[int, str]]:
+        instances: list[tuple[int, str]] = find_gates_in_first_layer(RYGate(0).name, self.circuit)
             
         if len(instances) < self.THRESHOLD * self.circuit.num_qubits:
             return []
@@ -28,7 +28,7 @@ class AngleEncodingDetector(PatternDetector):
     # Search for R_y gates in the first layer.
     def build_message(self) -> str:
         message = ""
-        instances: list[(int, str)] = self.detect_pattern()
+        instances: list[tuple[int, str]] = self.detect_pattern()
 
         if not instances:
             return "Angle Encoding: No instance found.\n"
@@ -57,8 +57,8 @@ class BasisEncodingDetector(PatternDetector):
         self.load_circuit(self.program)
 
     # Search for Pauli-X gates in the first layer.
-    def detect_pattern(self) -> list[(int, str)]:
-        instances: list[(int, str)] = find_gates_in_first_layer(XGate().name, self.circuit)
+    def detect_pattern(self) -> list[tuple[int, str]]:
+        instances: list[tuple[int, str]] = find_gates_in_first_layer(XGate().name, self.circuit)
             
         if len(instances) < self.THRESHOLD * self.circuit.num_qubits:
             return []
@@ -68,7 +68,7 @@ class BasisEncodingDetector(PatternDetector):
 
     def build_message(self) -> str:
         message = ""
-        instances: list[(int, str)] = self.detect_pattern()
+        instances: list[tuple[int, str]] = self.detect_pattern()
 
         if not instances:
             return "Basis Encoding: No instance found.\n"
@@ -82,8 +82,8 @@ class BasisEncodingDetector(PatternDetector):
         return message
 
 
-def find_gates_in_first_layer(gate_name: str, circuit: QuantumCircuit) -> list[(int, str)]:
-    instances: list[(int, str)] = []
+def find_gates_in_first_layer(gate_name: str, circuit: QuantumCircuit) -> list[tuple[int, str]]:
+    instances: list[tuple[int, str]] = []
     dag: DAGCircuit = circuit_to_dag(circuit)
 
     for node in dag.front_layer():

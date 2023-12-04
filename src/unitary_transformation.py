@@ -22,7 +22,7 @@ class PhaseEstimationDetector(PatternDetector):
         # Stores bits in unifrom superposition with the corresponding gates.
         # key: possible gate and the bits it operates on
         # value: list of hadamard transformed bits
-        hadamards: dict = {}
+        hadamards: dict[str, list[int]] = {}
 
         found_u: bool = False
 
@@ -39,7 +39,7 @@ class PhaseEstimationDetector(PatternDetector):
                 # Look for U gates.
                 if node.op.num_qubits > 1:
                     found_u = True
-                    operating_bits: list = []
+                    operating_bits: list[int] = []
                     for i in range(1, len(node.qargs)):
                         o_qubit: Qubit = node.qargs[i]
                         location: BitLocations = self.circuit.find_bit(o_qubit)
@@ -160,7 +160,7 @@ class UncomputeDetector(PatternDetector):
         # Stores all bit pairs where a cx gate has been applied to.
         # key: control bit
         # value: operating bit
-        cx_nodes: dict = {}
+        cx_nodes: dict[int, int] = {}
 
         added: bool = False
         

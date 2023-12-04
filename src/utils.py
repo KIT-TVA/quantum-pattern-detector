@@ -24,15 +24,15 @@ class FileReader:
 
 
 # Calculates all possible combinations of values in the input list.
-def get_combinations(input_list: list) -> Generator:
-    masks: list = [1 << i for i in range(len(input_list))]
+def get_combinations(input_list: list[int]) -> Generator[list[int], None, None]:
+    masks: list[int] = [1 << i for i in range(len(input_list))]
     for i in range(1 << len(input_list)):
         yield [ss for mask, ss in zip(masks, input_list) if i & mask]
 
 
-def convert_to_int(list: list) -> list:
-    copy = deepcopy(list)
-    for i in range(0, len(list)):
-        copy[i] = int(list[i], 2)
+def convert_to_int(input_list: list[str]) -> list[int]:
+    copy: list[int] = deepcopy(input_list)
+    for i in range(0, len(input_list)):
+        copy[i] = int(input_list[i], 2)
 
     return copy

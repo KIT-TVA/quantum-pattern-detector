@@ -1,5 +1,5 @@
 import os, sys
-parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+parent_dir: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir + "/src")
 
 from abstract_detector import PatternDetector
@@ -11,25 +11,25 @@ from measurement import PostSelectiveMeasurementDetector
 from io import TextIOWrapper
 
 
-FILE_PATH: list = ["adder_with_overflow",
-                   "adder_without_overflow",
-                   "amplitude_estimation", 
-                   "deutsch_jozsa", 
-                   "ghz", 
-                   "graph_state", 
-                   "grover",
-                   "hhl",
-                   "multiplier",
-                   "qaoa",
-                   "qft",
-                   "qft_entangled",
-                   "quantum_phase_estimation",
-                   "quantum_walk",
-                   "real_amplitudes",
-                   "shor",
-                   "su2",
-                   "variational_quantum_eigensolver",
-                   "wstate"]
+FILE_PATH: list[str] = ["adder_with_overflow",
+                        "adder_without_overflow",
+                        "amplitude_estimation", 
+                        "deutsch_jozsa", 
+                        "ghz", 
+                        "graph_state", 
+                        "grover",
+                        "hhl",
+                        "multiplier",
+                        "qaoa",
+                        "qft",
+                        "qft_entangled",
+                        "quantum_phase_estimation",
+                        "quantum_walk",
+                        "real_amplitudes",
+                        "shor",
+                        "su2",
+                        "variational_quantum_eigensolver",
+                        "wstate"]
 
 def all_messages() -> str:
     msg: str = ""
@@ -49,7 +49,7 @@ def all_messages() -> str:
     return msg.strip()
 
 def all_metrics() -> str:
-    return (metrics_ufs() + \
+    return (metrics_ufs() + "\n" + \
             metrics_entanglement() + "\n" + \
             metrics_basis_encoding() + "\n" + \
             metrics_angle_encoding() + "\n" + \
@@ -58,7 +58,7 @@ def all_metrics() -> str:
             metrics_psm()).strip()
 
 def metrics_ufs() -> str:
-    ground_truth: dict[str, list[(int, int)]] = \
+    ground_truth: dict[str, list[tuple[int, int]]] = \
         {"adder_with_overflow": [],
          "adder_without_overflow": [],
          "amplitude_estimation": [(6,9)], 
@@ -79,14 +79,14 @@ def metrics_ufs() -> str:
          "variational_quantum_eigensolver": [],
          "wstate": []}
     
-    metrics: (int, int, int) = metrics_for_line_detectors(ground_truth, UniformSuperpositionDetector)
+    metrics: tuple[float, float, float] = metrics_for_line_detectors(ground_truth, UniformSuperpositionDetector)
 
     return "Uniform superposition detector\n" + \
            "----------------------------------\n" +\
            "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
 
 def metrics_entanglement() -> str:
-    ground_truth: dict[str, list[(int, int)]] = \
+    ground_truth: dict[str, list[tuple[int, int]]] = \
         {"adder_with_overflow": [],
          "adder_without_overflow": [],
          "amplitude_estimation": [(12,25)], 
@@ -107,7 +107,7 @@ def metrics_entanglement() -> str:
          "variational_quantum_eigensolver": [(8,19)],
          "wstate": [(10,15)]}
     
-    metrics: (float, float, float) = metrics_for_line_detectors(ground_truth, EntanglementDetector)
+    metrics: tuple[float, float, float] = metrics_for_line_detectors(ground_truth, EntanglementDetector)
 
     return "Entanglement detector\n" + \
            "----------------------------------\n" +\
@@ -135,7 +135,11 @@ def metrics_basis_encoding() -> str:
          "variational_quantum_eigensolver": False,
          "wstate": False}
     
-    metrics: (float, float, float) = metrics_for_instance_detectors(ground_truth, BasisEncodingDetector, use_list=True)
+    metrics: tuple[float, float, float] = metrics_for_instance_detectors(
+                                            ground_truth, 
+                                            BasisEncodingDetector, 
+                                            use_list=True
+                                        )
 
     return "Basis encoding detector\n" + \
            "----------------------------------\n" +\
@@ -163,7 +167,11 @@ def metrics_angle_encoding() -> str:
          "variational_quantum_eigensolver": True,
          "wstate": False}
     
-    metrics: (float, float, float) = metrics_for_instance_detectors(ground_truth, AngleEncodingDetector, use_list=True)
+    metrics: tuple[float, float, float] = metrics_for_instance_detectors(
+                                            ground_truth, 
+                                            AngleEncodingDetector, 
+                                            use_list=True
+                                        )
 
     return "Angle encoding detector\n" + \
            "----------------------------------\n" +\
@@ -191,7 +199,7 @@ def metrics_qpe() -> str:
          "variational_quantum_eigensolver": False,
          "wstate": False}
     
-    metrics: (float, float, float) = metrics_for_instance_detectors(ground_truth, PhaseEstimationDetector)
+    metrics: tuple[float, float, float] = metrics_for_instance_detectors(ground_truth, PhaseEstimationDetector)
 
     return "Quantum Phase Estimation detector\n" + \
            "----------------------------------\n" +\
@@ -219,7 +227,7 @@ def metrics_uncompute() -> str:
          "variational_quantum_eigensolver": False,
          "wstate": False}
     
-    metrics: (float, float, float) = metrics_for_instance_detectors(ground_truth, UncomputeDetector)
+    metrics: tuple[float, float, float] = metrics_for_instance_detectors(ground_truth, UncomputeDetector)
 
     return "Uncompute detector\n" + \
            "----------------------------------\n" +\
@@ -247,11 +255,11 @@ def metrics_psm() -> str:
          "variational_quantum_eigensolver": False,
          "wstate": False}
     
-    metrics: (float, float, float) = metrics_for_instance_detectors(
-                                        ground_truth, 
-                                        PostSelectiveMeasurementDetector, 
-                                        use_list=True
-                                    )
+    metrics: tuple[float, float, float] = metrics_for_instance_detectors(
+                                            ground_truth, 
+                                            PostSelectiveMeasurementDetector, 
+                                            use_list=True
+                                        )
 
     return "Post Selctive Measurement detector\n" + \
            "----------------------------------\n" +\
@@ -263,7 +271,7 @@ def get_file_path(file_str: str) -> str:
     
     return file_path
 
-def calculate_metrics(tp: int, fp: int, fn: int) -> (float, float, float):
+def calculate_metrics(tp: int, fp: int, fn: int) -> tuple[float, float, float]:
 
     precision: float = tp / (tp + fp)
     recall: float = tp / (tp + fn)
@@ -272,9 +280,9 @@ def calculate_metrics(tp: int, fp: int, fn: int) -> (float, float, float):
     return (round(precision, 4), round(recall, 4), round(f_measure, 4))
 
 def metrics_for_line_detectors(
-        ground_truth: dict[str, list[(int, int)]], 
+        ground_truth: dict[str, list[tuple[int, int]]], 
         detector: PatternDetector
-    ) -> (float, float, float):
+    ) -> tuple[float, float, float]:
     
     true_positives: int = 0
     false_positives: int = 0
@@ -282,7 +290,7 @@ def metrics_for_line_detectors(
 
     for key, value in ground_truth.items():
         input_file: TextIOWrapper = open(get_file_path(key))
-        detected_instances: list[(int, int)] = detector(input_file).detect_pattern()
+        detected_instances: list[tuple[int, int]] = detector(input_file).detect_pattern()
 
         if value == detected_instances:
             true_positives += len(value)
@@ -304,7 +312,7 @@ def metrics_for_instance_detectors(
         ground_truth: dict[str, bool], 
         detector: PatternDetector, 
         use_list=False
-    ) -> (float, float, float):
+    ) -> tuple[float, float, float]:
 
     true_positives: int = 0
     false_positives: int = 0

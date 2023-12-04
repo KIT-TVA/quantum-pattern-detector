@@ -19,8 +19,8 @@ class EntanglementDetector(PatternDetector):
     def __init__(self, program: TextIOWrapper) -> None:
         super().__init__(program)
 
-    def detect_pattern(self) -> list[(int, int)]:
-        pattern_instances: list[(int, int)] = []
+    def detect_pattern(self) -> list[tuple[int, int]]:
+        pattern_instances: list[tuple[int, int]] = []
         current_start_line: int = -1
         is_entangled: bool = True
         reader: FileReader = FileReader(self.program)
@@ -44,12 +44,12 @@ class EntanglementDetector(PatternDetector):
             outputstate: Statevector = result.get_statevector(self.circuit)
 
             # Determines if a quantum state is entangled using Schmidt decomposition.
-            combinations: list = list(get_combinations(range(0, self.circuit.num_qubits)))[1:-1]
+            combinations: list[list[int]] = list(get_combinations(range(0, self.circuit.num_qubits)))[1:-1]
             found: bool = False
             for comb in combinations:
-                decomp: list = schmidt_decomposition(outputstate, comb)
+                decomp: list[tuple[Any, Statevector, Statevector]] = schmidt_decomposition(outputstate, comb)
 
-                schmidt_coefficents: list = []
+                schmidt_coefficents: list[float] = []
                 for decomp_elem in decomp:
                     schmidt_coefficents.append(decomp_elem[0])
 
@@ -84,7 +84,6 @@ class EntanglementDetector(PatternDetector):
                         "from line {start_ln} to {end_ln}.\n".format(start_ln=instance[0], end_ln=instance[1]))
             
         return message
-        
     
 
 class UniformSuperpositionDetector(PatternDetector):
@@ -93,8 +92,8 @@ class UniformSuperpositionDetector(PatternDetector):
         super().__init__(program)
         self.load_circuit(self.program)
 
-    def detect_pattern(self) -> list[(int, int)]:
-        pattern_instances: list[(int, int)] = []
+    def detect_pattern(self) -> list[tuple[int, int]]:
+        pattern_instances: list[tuple[int, int]] = []
         current_start_line: int = -1
         in_ufs: bool = True
         reader: FileReader = FileReader(self.program)
@@ -119,14 +118,14 @@ class UniformSuperpositionDetector(PatternDetector):
                 if node.name == Measure().name:
                     has_measurement = True
             
-            prob: list = [0] * (2 ** self.circuit.num_qubits)
+            prob: list[float] = [0] * (2 ** self.circuit.num_qubits)
 
             # Calculate measurement probabilities by simulating measurements.
             if has_measurement:
                 backend: AerSimulator = Aer.get_backend('aer_simulator')
                 self.circuit = transpile(self.circuit, backend)
                 result: Result = backend.run(self.circuit).result()
-                counts: dict = result.get_counts()
+                counts: dict[str, int] = result.get_counts()
                 shots: int = sum(counts.values())
 
                 for key, value in counts.items():
@@ -141,24 +140,24 @@ class UniformSuperpositionDetector(PatternDetector):
                 self.circuit = transpile(self.circuit, backend)
                 result: Result = backend.run(self.circuit).result()
                 outputstate: Statevector = result.get_statevector(self.circuit)
-                prob: list = outputstate.probabilities()
+                prob = outputstate.probabilities()
             
             # Round probabilities for better comparison.
-            rounded_prob: list =  [round(x,4) for x in prob] 
+            rounded_prob: list[float] =  [round(x,4) for x in prob] 
 
             # Binary encodes states
-            binary_combinations: list = self.calc_all_binary_combinations(self.circuit.num_qubits)
+            binary_combinations: list[str] = self.calc_all_binary_combinations(self.circuit.num_qubits)
 
             # All possible ancilla bits
-            state_combinations: list = list(get_combinations(range(0, self.circuit.num_qubits)))
+            state_combinations: list[list[int]] = list(get_combinations(range(0, self.circuit.num_qubits)))
             state_combinations.pop()
 
             found: bool = False
             for state in state_combinations:
-                c_binary_combinations: list = deepcopy(binary_combinations)
+                c_binary_combinations: list[str] = deepcopy(binary_combinations)
 
-                filtered_states_0: list = self.filter_indices(c_binary_combinations, state, '0')
-                filtered_states_1: list = self.filter_indices(c_binary_combinations, state, '1')
+                filtered_states_0: list[str] = self.filter_indices(c_binary_combinations, state, '0')
+                filtered_states_1: list[str] = self.filter_indices(c_binary_combinations, state, '1')
 
                 if self.in_ufs(rounded_prob, convert_to_int(filtered_states_0)) or \
                     self.in_ufs(rounded_prob, convert_to_int(filtered_states_1)):
@@ -194,19 +193,19 @@ class UniformSuperpositionDetector(PatternDetector):
         return message
 
     @staticmethod
-    def calc_all_binary_combinations(n: int) -> list:
-        result: list = []
+    def calc_all_binary_combinations(n: int) -> list[str]:
+        result: list[str] = []
         for i in range(1 << n):
             # Convert the current number to a binary string of length n
-            binary_str = format(i, '0' + str(n) + 'b')
+            binary_str: str = format(i, '0' + str(n) + 'b')
             result.append(binary_str)
 
         return result
 
     @staticmethod
-    def filter_indices(binary_list: list, index_list: list, significant_bit: str) -> list:
-        list_copy: list = deepcopy(binary_list)
-        to_delete: list = []
+    def filter_indices(binary_list: list[str], index_list: list[int], significant_bit: str) -> list[str]:
+        list_copy: list[str] = deepcopy(binary_list)
+        to_delete: list[str] = []
         elem_count: int = 0
         for i in range(0, len(binary_list)):
             for index in index_list:
@@ -221,7 +220,7 @@ class UniformSuperpositionDetector(PatternDetector):
         return list_copy
 
     @staticmethod
-    def in_ufs(list: list, indices: list) -> bool:
+    def in_ufs(list: list[float], indices: list[int]) -> bool:
         to_compare: float = list[indices[0]]
 
         if to_compare == 0:
