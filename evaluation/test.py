@@ -1,3 +1,5 @@
+"""Methods for evaluating the pattern detectors."""
+
 import os, sys
 parent_dir: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir + "/src")
@@ -32,6 +34,11 @@ FILE_PATH: list[str] = ["adder_with_overflow",
                         "wstate"]
 
 def all_messages() -> str:
+    """Construct messages of all pattern detectors in a readable format.
+    
+    Returns: 
+        str: Messages of every pattern detector.
+    """
     msg: str = ""
 
     for file_str in FILE_PATH:
@@ -49,6 +56,13 @@ def all_messages() -> str:
     return msg.strip()
 
 def all_metrics() -> str:
+    """Calculate evaluation metrics for every patten detector.
+    
+    The metrics precision, recall and f-measure are used for evaluation.
+
+    Returns:
+        str: The calculated evaluation metrics for every pattern detector.
+    """
     return (metrics_ufs() + "\n" + \
             metrics_entanglement() + "\n" + \
             metrics_basis_encoding() + "\n" + \
@@ -58,6 +72,11 @@ def all_metrics() -> str:
             metrics_psm()).strip()
 
 def metrics_ufs() -> str:
+    """Calculate the metrics precision, recall and f-measure for the Uniform Superposition detector.
+    
+    Returns:
+        str: The calculated evaluation metrics for the Uniform Superposition detector.
+    """
     ground_truth: dict[str, list[tuple[int, int]]] = \
         {"adder_with_overflow": [],
          "adder_without_overflow": [],
@@ -86,6 +105,11 @@ def metrics_ufs() -> str:
            "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
 
 def metrics_entanglement() -> str:
+    """Calculate the metrics precision, recall and f-measure for the Creating Entanglement detector.
+    
+    Returns:
+        str: The calculated evaluation metrics for the Creating Entanglement detector.
+    """
     ground_truth: dict[str, list[tuple[int, int]]] = \
         {"adder_with_overflow": [],
          "adder_without_overflow": [],
@@ -114,6 +138,11 @@ def metrics_entanglement() -> str:
            "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
 
 def metrics_basis_encoding() -> str: 
+    """Calculate the metrics precision, recall and f-measure for the Basis Encoding detector.
+    
+    Returns:
+        str: The calculated evaluation metrics for the Basis Encoding detector.
+    """
     ground_truth: dict[str, bool] = \
         {"adder_with_overflow": True,
          "adder_without_overflow": True,
@@ -146,6 +175,11 @@ def metrics_basis_encoding() -> str:
            "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
 
 def metrics_angle_encoding() -> str: 
+    """Calculate the metrics precision, recall and f-measure for the Angle Encoding detector.
+    
+    Returns:
+        str: The calculated evaluation metrics for the Angle Encoding detector.
+    """
     ground_truth: dict[str, bool] = \
         {"adder_with_overflow": False,
          "adder_without_overflow": False,
@@ -178,6 +212,11 @@ def metrics_angle_encoding() -> str:
            "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
 
 def metrics_qpe() -> str: 
+    """Calculate the metrics precision, recall and f-measure for the Quantum Phase Estimation detector.
+    
+    Returns:
+        str: The calculated evaluation metrics for the Quantum Phase Estimation detector.
+    """
     ground_truth: dict[str, bool] = \
         {"adder_with_overflow": False,
          "adder_without_overflow": False,
@@ -206,6 +245,11 @@ def metrics_qpe() -> str:
            "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
 
 def metrics_uncompute() -> str: 
+    """Calculate the metrics precision, recall and f-measure for the Uncompute detector.
+    
+    Returns:
+        str: The calculated evaluation metrics for the Uncompute detector.
+    """
     ground_truth: dict[str, bool] = \
         {"adder_with_overflow": False,
          "adder_without_overflow": False,
@@ -234,6 +278,11 @@ def metrics_uncompute() -> str:
            "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
 
 def metrics_psm() -> str: 
+    """Calculate the metrics precision, recall and f-measure for the Post Selective Measurement detector.
+    
+    Returns:
+        str: The calculated evaluation metrics for the Post Selective Measurement detector.
+    """
     ground_truth: dict[str, bool] = \
         {"adder_with_overflow": False,
          "adder_without_overflow": False,
@@ -266,12 +315,30 @@ def metrics_psm() -> str:
            "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
 
 def get_file_path(file_str: str) -> str:
+    """Compute the path to the file with a certain name in the evaluation framework.
+    
+    Args:
+        file_str (str): Name of the file.
+
+    Returns:
+        str: Path to the file with the name ```file_str``.
+    """
     path_str: str = parent_dir + "/evaluation/"
     file_path: str = path_str + file_str + "/" + file_str + ".qasm"
     
     return file_path
 
 def calculate_metrics(tp: int, fp: int, fn: int) -> tuple[float, float, float]:
+    """Calculate the evaluation metrics for given numbers of true positives, false positives and false negatives.
+
+    Args: 
+        tp (int): Nuber of true positives.
+        fp (int): Nuber of false positives.
+        fn (int): Nuber of false negatives.
+
+    Returns:
+        tuple[float, float, float]: Tuple containing the values precision, recall and f-measure.
+    """
 
     precision: float = tp / (tp + fp)
     recall: float = tp / (tp + fn)
@@ -283,6 +350,17 @@ def metrics_for_line_detectors(
         ground_truth: dict[str, list[tuple[int, int]]], 
         detector: PatternDetector
     ) -> tuple[float, float, float]:
+    """Calculate evaluation metrics for detectors which return code lines as pattern instances.
+    
+    These detectors are detectors for Uniform Superposition and Creating Entanglement.
+
+    Args:
+        ground_truth (dict[str, list[tuple[int, int]]]): The ground truth for an algorithm that is used for evaluation.
+        detector (PatternDetector): The pattern detector to evaluate.
+
+    Returns:
+        tuple[float, float, float]: Tuple containing the values precision, recall and f-measure.
+    """
     
     true_positives: int = 0
     false_positives: int = 0
@@ -311,8 +389,21 @@ def metrics_for_line_detectors(
 def metrics_for_instance_detectors(
         ground_truth: dict[str, bool], 
         detector: PatternDetector, 
-        use_list=False
+        use_list: bool = False
     ) -> tuple[float, float, float]:
+    """Calculate evaluation metrics for detectors which return pattern instances without code line information.
+    
+    These detectors are detectors for Basis Encoding, Angle Encoding, Quantum Phase Estimation, Uncompute and 
+    Post Selective Measurement.
+
+    Args:
+        ground_truth (dict[str, list[tuple[int, int]]]): The ground truth for an algorithm that is used for evaluation.
+        detector (PatternDetector): The pattern detector to evaluate.
+        use_list (bool): Optional. Specifies if the detector uses lists for pattern description.
+
+    Returns:
+        tuple[float, float, float]: Tuple containing the values precision, recall and f-measure.
+    """
 
     true_positives: int = 0
     false_positives: int = 0
