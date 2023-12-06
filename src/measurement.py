@@ -1,4 +1,5 @@
-from typing import Any
+"""Detectors for measurement patterns."""
+
 from abstract_detector import PatternDetector
 
 from qiskit.circuit.library import Measure
@@ -9,12 +10,27 @@ from io import TextIOWrapper
 
 
 class PostSelectiveMeasurementDetector(PatternDetector):
+    """Detector for the pattern Post Selective Measurement."""
 
     def __init__(self, program: TextIOWrapper) -> None:
+        """Create a new detector for Post Selective Measurement.
+        
+        Args:
+            program (TextIOWrapper): Wrapper that encodes the OPENQASM file in which patterns should be detected.
+        """
         super().__init__(program)
         self.load_circuit(self.program)
 
     def detect_pattern(self) -> list[int]:
+        """Detect instances of Post Selective Measurement.
+
+        Post Selective Measurement refers to the process of conditioning the continuation of a 
+        quantum algorithm on the outcome of a measurement. The pattern is detected by searching for these
+        conditioned operations.
+        
+        Returns:
+            list[int]: A list of indices of qubits that are used for Post Selective Measurement.
+        """
         found: bool = False
         instances: list[int] = []
         dag: DAGCircuit = circuit_to_dag(self.circuit)
@@ -49,6 +65,11 @@ class PostSelectiveMeasurementDetector(PatternDetector):
 
 
     def build_message(self) -> str:
+        """Construct a human-readable message about the detection result.
+        
+        Returns:
+            str: Message that contains information whether an instance of Post Selective Measurement was found.
+        """
         message = ""
         instances: list[int] = self.detect_pattern()
 

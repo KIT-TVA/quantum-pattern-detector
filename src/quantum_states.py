@@ -1,3 +1,5 @@
+"""Detectors for patterns for the manipulation of quantum states."""
+
 from typing import Any
 from utils import FileReader, get_combinations, convert_to_int
 from abstract_detector import PatternDetector
@@ -15,11 +17,26 @@ from io import TextIOWrapper
 
 
 class EntanglementDetector(PatternDetector):
+    """Detector for the pattern Creating Entanglement."""
 
     def __init__(self, program: TextIOWrapper) -> None:
+        """Create a new detector for Creating Entanglement.
+        
+        Args:
+            program (TextIOWrapper): Wrapper that encodes the OPENQASM file in which patterns should be detected.
+        """
         super().__init__(program)
 
     def detect_pattern(self) -> list[tuple[int, int]]:
+        """Detect instances of Creating Entanglement.
+
+        Creating Entanglement refers to the process of creating a strong correlation between qubits.
+        The pattern is detected by analyzing the Schmidt decomposition of the quantum states.
+        
+        Returns:
+            list[tuple[int, int]]: A list of tuples consisting of start and end line of the given OPENQASM code where
+                                   the quantum state is entangled.
+        """
         pattern_instances: list[tuple[int, int]] = []
         current_start_line: int = -1
         is_entangled: bool = True
@@ -77,6 +94,11 @@ class EntanglementDetector(PatternDetector):
         return pattern_instances
 
     def build_message(self) -> str:
+        """Construct a human-readable message about the detection result.
+        
+        Returns:
+            str: Message that contains code places where the pattern was detected.
+        """
         message: str = ""
 
         for instance in self.detect_pattern():
@@ -87,12 +109,27 @@ class EntanglementDetector(PatternDetector):
     
 
 class UniformSuperpositionDetector(PatternDetector):
+    """Detector for the pattern Uniform Superposition."""
 
     def __init__(self, program: TextIOWrapper) -> None:
+        """Create a new detector for Uniform Superposition.
+        
+        Args:
+            program (TextIOWrapper): Wrapper that encodes the OPENQASM file in which patterns should be detected.
+        """
         super().__init__(program)
         self.load_circuit(self.program)
 
     def detect_pattern(self) -> list[tuple[int, int]]:
+        """Detect instances of Uniform Superposition.
+
+        A quantum state is in Uniform Superposition if all possible outcomes of the quantum register are equally likely.
+        The pattern is detected by analysing the state probabilities.
+        
+        Returns:
+            list[tuple[int, int]]: A list of tuples consisting of start and end line of the given OPENQASM code where
+                                   the quantum state is in Uniform Superposition.
+        """
         pattern_instances: list[tuple[int, int]] = []
         current_start_line: int = -1
         in_ufs: bool = True
@@ -184,6 +221,11 @@ class UniformSuperpositionDetector(PatternDetector):
         return pattern_instances
 
     def build_message(self) -> str:
+        """Construct a human-readable message about the detection result.
+        
+        Returns:
+            str: Message that contains code places where the pattern was detected.
+        """
         message: str = ""
 
         for instance in self.detect_pattern():
@@ -194,6 +236,16 @@ class UniformSuperpositionDetector(PatternDetector):
 
     @staticmethod
     def calc_all_binary_combinations(n: int) -> list[str]:
+        """Calculate all binary numbers up to a given decimal number.
+
+        This method is used for converting quantum states into binary representation for further processing.
+        
+        Args:
+            n (int): The upper bound in decimal representation to which binary numbers should be generated.
+
+        Returns:
+            list[str]: List containing the generated binary numbers.
+        """
         result: list[str] = []
         for i in range(1 << n):
             # Convert the current number to a binary string of length n
@@ -204,6 +256,16 @@ class UniformSuperpositionDetector(PatternDetector):
 
     @staticmethod
     def filter_indices(binary_list: list[str], index_list: list[int], significant_bit: str) -> list[str]:
+        """Filter a given list of binary strings by comparing bits on certain indices with a significant bit.
+
+        This method is used for considering the usage of ancilla bits. If ancilla bits are used, then the probabilities 
+        of only a part of all quantum states have to be taken into account for detecting Uniform Superposition.
+        
+        Args:
+            binary_list (list[str]): List of strings which represent binary numbers.
+            index_list (list[int]): List of indices of bits that are compared with the significant bit.
+            significant_bit (str): Bit to which bits of the binary string are compared to. It is used for filtering.
+        """
         list_copy: list[str] = deepcopy(binary_list)
         to_delete: list[str] = []
         elem_count: int = 0
@@ -221,6 +283,16 @@ class UniformSuperpositionDetector(PatternDetector):
 
     @staticmethod
     def in_ufs(list: list[float], indices: list[int]) -> bool:
+        """Checks if all values in a list on certain indices are the same.
+        
+        This method is used for verifying if a quantum state is in Uniform Superposition by comparing if all state
+        probabilities are the same.
+
+        Args:
+            list (list[float]): The input list with state probabilities.
+            indices (list[float]): List of indices that have to be taken into consideration. This is needed due to the
+                                   fact of ancilla bits. In that case not all state probabilities are relevant.
+        """
         to_compare: float = list[indices[0]]
 
         if to_compare == 0:
