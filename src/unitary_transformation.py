@@ -1,4 +1,5 @@
-from typing import Any
+"""Detectors for patterns for unitary transformations."""
+
 from abstract_detector import PatternDetector
 
 from qiskit import QuantumCircuit
@@ -10,13 +11,27 @@ from io import TextIOWrapper
 
 
 class PhaseEstimationDetector(PatternDetector):
+    """Detector for the pattern Quantum Phase Estimation."""
 
     def __init__(self, program: TextIOWrapper) -> None:
+        """Create a new detector for Quantum Phase Estimation.
+        
+        Args:
+            program (TextIOWrapper): Wrapper that encodes the OPENQASM file in which patterns should be detected.
+        """
         super().__init__(program)
         self.load_circuit(self.program)
 
     # Search for the special circuit used for PhaseEstimation.
     def detect_pattern(self) ->  bool:
+        """Detect instances of Quantum Phase Estimation.
+        
+        Quantum Phase Estimation is used for approximating the eigenvalue of a unitary transformation. 
+        The pattern is detected by searching the typcial circuit structure.
+
+        Returns:
+            bool: True if an instance of Quantum Phase Estimation was detected, False otherwise.
+        """
         dag: DAGCircuit = circuit_to_dag(self.circuit)
 
         # Stores bits in unifrom superposition with the corresponding gates.
@@ -97,7 +112,11 @@ class PhaseEstimationDetector(PatternDetector):
 
     
     def build_message(self) -> str:
+        """Construct a human-readable message about the detection result.
         
+        Returns:
+            str: Message with information whether an instance of Quantum Phase Estimation was detected.
+        """
         if self.detect_pattern():
             return "Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.\n"
 
@@ -105,16 +124,35 @@ class PhaseEstimationDetector(PatternDetector):
 
 
 class UncomputeDetector(PatternDetector):
+    """Detector for the pattern Uncompute."""
     
     def __init__(self, program: TextIOWrapper) -> None:
+        """Create a new detector for Uncompute.
+        
+        Args:
+            program (TextIOWrapper): Wrapper that encodes the OPENQASM file in which patterns should be detected.
+        """
         super().__init__(program)
         self.load_circuit(self.program)
 
     def detect_pattern(self) -> bool:
+        """Detect instances of Uncompute.
+        
+        Uncompute refers to the process of removing entanglement in the quantum state. The pattern is detected by
+        searching for the typical circuit structure and subcircuits that are inverse to other subcircuits of the given
+        quantum circuit.
+
+        Returns:
+            bool: True if an instance of Uncompute was detected, False otherwise. 
+        """
         return self.detect_circuit_struc() or self.detect_inverse_subcircuit()
 
     def build_message(self) -> str:
-
+        """Construct a human-readable message about the detection result.
+        
+        Returns:
+            str: Message with information whether an instance of Uncompute was detected.
+        """
         if self.detect_pattern():
             return "Uncompute: Instance of Uncompute detected.\n"
 
@@ -122,6 +160,11 @@ class UncomputeDetector(PatternDetector):
     
     # Search for inverse subcircuits.
     def detect_inverse_subcircuit(self) -> bool:
+        """Decide if there is a subcircuit which is the inverse circuit of another subcircuit in the quantum circuit.
+        
+        Returns:
+            bool: True if such a subcircuit exists, False otherwise.
+        """
         self.circuit.remove_final_measurements()
         depth: int = self.circuit.depth()
         step: int = 0
@@ -155,6 +198,11 @@ class UncomputeDetector(PatternDetector):
 
     # Search for typical circuit structure.
     def detect_circuit_struc(self) -> bool:
+        """Detect the typical circuit structure of Uncompute.
+        
+        Returns:
+            bool: True if the circuit structure was detected, False otherwise.
+        """
         dag: DAGCircuit = circuit_to_dag(self.circuit)
 
         # Stores all bit pairs where a cx gate has been applied to.
@@ -200,6 +248,17 @@ class UncomputeDetector(PatternDetector):
     
     # Returns subcircuit from layer start to layer end (inclusive).
     def get_subcircuit(self, start: int, end: int) -> QuantumCircuit:
+        """Computed the subcircuit of a given quantum circuit.
+
+        The layers ``start`` and ``end`` are inclusive which means that they are in the subcircuit.
+        
+        Args:
+            start (int): Number of the start layer of the subcircuit.
+            end (int): Number of the end layer of the subcircuit.
+
+        Returns:
+            QuantumCircuit: The subcircuit from ``start`` to ``end``.
+        """
         dag: DAGCircuit = circuit_to_dag(self.circuit)
         layers: list = list(dag.multigraph_layers())
 
