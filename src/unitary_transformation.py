@@ -37,14 +37,14 @@ class PhaseEstimationDetector(PatternDetector):
         # Stores bits in unifrom superposition with the corresponding gates.
         # key: possible gate and the bits it operates on
         # value: list of hadamard transformed bits
-        hadamards: dict[str, list[int]] = {}
+        hadamards: dict[str, list[tuple[int, bool]]] = {}
 
         found_u: bool = False
 
         # Iterate through all layers of the circuit.
         for layer in dag.layers():
 
-            # First iteration to fing u gates.
+            # First iteration to fing U gates.
             for node in layer['graph'].front_layer():
 
                 qubit: Qubit = node.qargs[0]
@@ -61,7 +61,7 @@ class PhaseEstimationDetector(PatternDetector):
                         operating_bits.append(location.index)
 
                     for key, value in hadamards.copy().items():
-                        if qubit_index not in value:
+                        if qubit_index not in value[0]:
                             del hadamards[key]
                             continue
 
@@ -75,14 +75,18 @@ class PhaseEstimationDetector(PatternDetector):
                         current_key: str = repr((name, operating_bits))
                         if key == "": 
                             hadamards[current_key] = hadamards.pop("")
-                            hadamards[current_key].remove(qubit_index)
+                            if (qubit_index, False) in hadamards[current_key]:
+                                hadamards[current_key].remove((qubit_index, False))
+                                hadamards[current_key].append((qubit_index, True))
                             continue
 
                         if key != current_key:
                             del hadamards[key]
                             continue
 
-                        hadamards[key].remove(qubit_index)
+                        if (qubit_index, False) in hadamards[current_key]:
+                            hadamards[key].remove((qubit_index, False))
+                            hadamards[key].append((qubit_index, True))
 
             if not found_u:
                 hadamards.clear()
@@ -98,14 +102,15 @@ class PhaseEstimationDetector(PatternDetector):
                     qubit_index: int = location.index
 
                     if "" in hadamards.keys():
-                        hadamards[""].append(qubit_index)
+                        hadamards[""].append((qubit_index, False))
                         continue
 
-                    hadamards[""] = [qubit_index]
+                    hadamards[""] = [(qubit_index, False)]
 
             # If all ancillary bits are used, an instance of the pattern has been found.
             for value in hadamards.values():
-                if not value:
+                marks: set[bool] = {mark for _, mark in value}
+                if len(marks) == 1 and marks.pop():
                     return True
                 
         return False
