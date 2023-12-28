@@ -1,7 +1,6 @@
 # Code adapted from: https://github.com/cda-tum/mqt-bench/blob/main/src/mqt/bench/benchmarks/ghz.py
 
 from qiskit import QuantumCircuit, QuantumRegister
-import qiskit.qasm2
 
 
 def ghz_circuit(num_qubits: int) -> QuantumCircuit:
@@ -19,5 +18,3 @@ def ghz_circuit(num_qubits: int) -> QuantumCircuit:
     qc.measure_all()
 
     return qc
-
-print(qiskit.qasm2.dumps(ghz_circuit(4)))

@@ -5,6 +5,8 @@ import numpy as np
 from qiskit import QuantumCircuit
 from qiskit_algorithms import AmplitudeEstimation, EstimationProblem
 
+from qiskit.qasm2 import dumps
+
 
 def ae_circuit(num_qubits: int) -> QuantumCircuit:
 
