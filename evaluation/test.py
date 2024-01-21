@@ -1,4 +1,4 @@
-"""Methods for evaluating the pattern detectors."""
+"""Methods for evaluating the performance of the pattern detectors."""
 
 import os, sys
 parent_dir: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
