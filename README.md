@@ -15,7 +15,7 @@ Follow the following steps for the reproduction of the evluation results:
 2. Navigate into the `evaluation` directory inside a terminal.
 3. Run either
    ```
-   python text.py
+   python test.py
    ```
    for evaluating the performance of our detection programs or
    ```
