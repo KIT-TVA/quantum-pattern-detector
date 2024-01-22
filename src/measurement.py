@@ -31,35 +31,34 @@ class PostSelectiveMeasurementDetector(PatternDetector):
         Returns:
             list[int]: A list of indices of qubits that are used for Post Selective Measurement.
         """
-        found: bool = False
         instances: list[int] = []
-        dag: DAGCircuit = circuit_to_dag(self.circuit)
+        dag: DAGCircuit = circuit_to_dag(self.circuit).reverse_ops()
+        num_of_measurements: int = len(dag.named_nodes(Measure().name))
+        count: int = 0
 
         # key: Target register for measurement
         # value: Index of qubit to measure
-        measurements: dict[str, int] = {}
+        measurements: list[str] = []
 
         for layer in dag.layers():
             for node in layer['graph'].front_layer():
+                if len(node.op.condition_bits) != 0:
+                    for clbit in node.op.condition_bits:
+                        register_name: str = clbit.register.name
+                        measurements.append(register_name)
+
                 if node.name == Measure().name:
+                    count += 1
                     qubit: Qubit = node.qargs[0]
                     location: BitLocations = self.circuit.find_bit(qubit)
                     qubit_index: int = location.index
                     register_name: str = node.cargs[0].register.name
 
-                    measurements[register_name] = qubit_index
+                    if register_name in measurements:
+                        instances.append(qubit_index)
                 
-                if len(node.op.condition_bits) != 0:
-                    for clbit in node.op.condition_bits:
-                        register_name: str = clbit.register.name
-
-                        if register_name in measurements.keys():
-                            found = True
-                            instances.append(measurements[register_name])
-                            del measurements[register_name]
-
-        if not found: 
-            return []
+                if count >= num_of_measurements:
+                    return instances
 
         return instances
 
