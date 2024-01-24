@@ -17,7 +17,7 @@ Follow the following steps for the reproduction of the evluation results:
    ```
    python test.py
    ```
-   for evaluating the performance of our detection programs or
+   for evaluating the performance of our detection programs (this may take a while) or
    ```
    python scalability_test.py <argv>
    ```
@@ -28,6 +28,7 @@ Follow the following steps for the reproduction of the evluation results:
    - `CreatingEntanglement`
    - `BasisEncoding`
    - `AngleEncoding`
+   - `AmplitudeEncoding`
    - `QuantumPhaseEstimation`
    - `Uncompute`
    - `PostSelectiveMeasurement`
