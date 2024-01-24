@@ -5,7 +5,7 @@ parent_dir: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir + "/src")
 
 from abstract_detector import PatternDetector
-from state_prep import AngleEncodingDetector, BasisEncodingDetector
+from state_prep import AngleEncodingDetector, BasisEncodingDetector, AmplitudeEncodingDetector
 from quantum_states import EntanglementDetector, UniformSuperpositionDetector
 from unitary_transformation import PhaseEstimationDetector, UncomputeDetector
 from measurement import PostSelectiveMeasurementDetector
@@ -15,6 +15,7 @@ from io import TextIOWrapper
 
 FILE_PATH: list[str] = ["adder_with_overflow",
                         "adder_without_overflow",
+                        "amplitude_encoding",
                         "amplitude_estimation", 
                         "deutsch_jozsa", 
                         "ghz", 
@@ -49,6 +50,7 @@ def all_messages() -> str:
                 EntanglementDetector(input_file).build_message() + "\n" + \
                 BasisEncodingDetector(input_file).build_message() + "\n" + \
                 AngleEncodingDetector(input_file).build_message() + "\n" + \
+                AmplitudeEncodingDetector(input_file).build_message() + "\n" + \
                 PhaseEstimationDetector(input_file).build_message() + "\n" + \
                 UncomputeDetector(input_file).build_message() + "\n" + \
                 PostSelectiveMeasurementDetector(input_file).build_message() + "\n\n"
@@ -67,6 +69,7 @@ def all_metrics() -> str:
             metrics_entanglement() + "\n" + \
             metrics_basis_encoding() + "\n" + \
             metrics_angle_encoding() + "\n" + \
+            metrics_amplitude_encoding() + "\n" + \
             metrics_qpe() + "\n" + \
             metrics_uncompute() + "\n" + \
             metrics_psm()).strip()
@@ -80,6 +83,7 @@ def metrics_ufs() -> str:
     ground_truth: dict[str, list[tuple[int, int]]] = \
         {"adder_with_overflow": [],
          "adder_without_overflow": [],
+         "amplitude_encoding": [],
          "amplitude_estimation": [(6,9)], 
          "deutsch_jozsa": [(5,16)], 
          "ghz": [(5,5)], 
@@ -113,6 +117,7 @@ def metrics_entanglement() -> str:
     ground_truth: dict[str, list[tuple[int, int]]] = \
         {"adder_with_overflow": [],
          "adder_without_overflow": [],
+         "amplitude_encoding": [(7,22)],
          "amplitude_estimation": [(12,25)], 
          "deutsch_jozsa": [], 
          "ghz": [(6,9)], 
@@ -146,6 +151,7 @@ def metrics_basis_encoding() -> str:
     ground_truth: dict[str, bool] = \
         {"adder_with_overflow": True,
          "adder_without_overflow": True,
+         "amplitude_encoding": False,
          "amplitude_estimation": False, 
          "deutsch_jozsa": False, 
          "ghz": False, 
@@ -183,6 +189,7 @@ def metrics_angle_encoding() -> str:
     ground_truth: dict[str, bool] = \
         {"adder_with_overflow": False,
          "adder_without_overflow": False,
+         "amplitude_encoding": False,
          "amplitude_estimation": False, 
          "deutsch_jozsa": False, 
          "ghz": False, 
@@ -211,6 +218,40 @@ def metrics_angle_encoding() -> str:
            "----------------------------------\n" +\
            "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
 
+def metrics_amplitude_encoding() -> str: 
+    """Calculate the metrics precision, recall and f-measure for the Amplitude Encoding detector.
+    
+    Returns:
+        str: The calculated evaluation metrics for the Amplitude Encoding detector.
+    """
+    ground_truth: dict[str, bool] = \
+        {"adder_with_overflow": False,
+         "adder_without_overflow": False,
+         "amplitude_encoding": True,
+         "amplitude_estimation": False,
+         "deutsch_jozsa": False, 
+         "ghz": False, 
+         "graph_state": False, 
+         "grover": False,
+         "hhl": False,
+         "multiplier": False,
+         "qaoa": False,
+         "qft": False,
+         "qft_entangled": False,
+         "quantum_phase_estimation": False,
+         "quantum_walk": False,
+         "real_amplitudes": False,
+         "shor": False,
+         "su2": False,
+         "variational_quantum_eigensolver": False,
+         "wstate": False}
+    
+    metrics: tuple[float, float, float] = metrics_for_instance_detectors(ground_truth, AmplitudeEncodingDetector)
+
+    return "Amplitude Encoding detector\n" + \
+           "----------------------------------\n" +\
+           "Precison: {p}, Recall: {r}, F-Measure: {f}\n".format(p=metrics[0], r=metrics[1], f=metrics[2])
+
 def metrics_qpe() -> str: 
     """Calculate the metrics precision, recall and f-measure for the Quantum Phase Estimation detector.
     
@@ -220,6 +261,7 @@ def metrics_qpe() -> str:
     ground_truth: dict[str, bool] = \
         {"adder_with_overflow": False,
          "adder_without_overflow": False,
+         "amplitude_encoding": False,
          "amplitude_estimation": True, 
          "deutsch_jozsa": False, 
          "ghz": False, 
@@ -253,6 +295,7 @@ def metrics_uncompute() -> str:
     ground_truth: dict[str, bool] = \
         {"adder_with_overflow": False,
          "adder_without_overflow": False,
+         "amplitude_encoding": True,
          "amplitude_estimation": False, 
          "deutsch_jozsa": True, 
          "ghz": False, 
@@ -286,6 +329,7 @@ def metrics_psm() -> str:
     ground_truth: dict[str, bool] = \
         {"adder_with_overflow": False,
          "adder_without_overflow": False,
+         "amplitude_encoding": False,
          "amplitude_estimation": False, 
          "deutsch_jozsa": False, 
          "ghz": False, 

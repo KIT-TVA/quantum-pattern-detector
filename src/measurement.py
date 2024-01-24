@@ -62,7 +62,6 @@ class PostSelectiveMeasurementDetector(PatternDetector):
 
         return instances
 
-
     def build_message(self) -> str:
         """Construct a human-readable message about the detection result.
         

@@ -5,7 +5,7 @@ parent_dir: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir + "/src")
 
 from abstract_detector import PatternDetector
-from state_prep import AngleEncodingDetector, BasisEncodingDetector
+from state_prep import AngleEncodingDetector, BasisEncodingDetector, AmplitudeEncodingDetector
 from quantum_states import EntanglementDetector, UniformSuperpositionDetector
 from unitary_transformation import PhaseEstimationDetector, UncomputeDetector
 from measurement import PostSelectiveMeasurementDetector
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     if sys.argv[1] == "UniformSuperposition" or sys.argv[1] == "CreatingEntanglement":
         set_num = 1
 
-    elif sys.argv[1] == "BasisEncoding" or sys.argv[1] == "AngleEncoding":
+    elif sys.argv[1] == "BasisEncoding" or sys.argv[1] == "AngleEncoding" or sys.argv[1] == "AmplitudeEncoding":
         set_num = 2
 
     elif sys.argv[1] == "QuantumPhaseEstimation" or sys.argv[1] == "PostSelectiveMeasurement":
@@ -54,6 +54,7 @@ if __name__ == '__main__':
                                             "CreatingEntanglement": EntanglementDetector,
                                             "BasisEncoding": BasisEncodingDetector,
                                             "AngleEncoding": AngleEncodingDetector,
+                                            "AmplitudeEncoding": AmplitudeEncodingDetector,
                                             "QuantumPhaseEstimation": PhaseEstimationDetector,
                                             "Uncompute": UncomputeDetector,
                                             "PostSelectiveMeasurement": PostSelectiveMeasurementDetector}

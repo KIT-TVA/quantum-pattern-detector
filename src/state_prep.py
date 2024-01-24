@@ -3,10 +3,11 @@
 from abstract_detector import PatternDetector
 
 from qiskit import QuantumRegister, QuantumCircuit
-from qiskit.circuit.library import XGate, RYGate
+from qiskit.circuit.library import XGate, RYGate, CXGate
 from qiskit.circuit.quantumcircuit import BitLocations, Qubit
 from qiskit.converters import circuit_to_dag
 from qiskit.dagcircuit import DAGCircuit
+
 from io import TextIOWrapper
 
 
@@ -41,7 +42,6 @@ class AngleEncodingDetector(PatternDetector):
             
         return instances
 
-    # Search for R_y gates in the first layer.
     def build_message(self) -> str:
         """Construct a human-readable message about the detection result.
         
@@ -65,8 +65,67 @@ class AngleEncodingDetector(PatternDetector):
 
 class AmplitudeEncodingDetector(PatternDetector):
     
-    # There are many methods for creating amplitude encoding which makes it difficult to detect.
-    pass
+    def __init__(self, program: TextIOWrapper) -> None:
+        """Create a new detector for Amplitude Encoding.
+        
+        Args:
+            program (TextIOWrapper): Wrapper that encodes the OPENQASM file in which patterns should be detected.
+        """
+        super().__init__(program)
+        self.load_circuit(self.program)
+    
+    def detect_pattern(self) -> bool:
+        """Detect instances of Amplitude Encoding.
+
+        Amplitude Encoding refers to the process of encoding classical data into the amlitudes of qubits.
+        There are several methods for implementing this idea. Our detection method is only capable of recognizing 
+        the implementation provided in [1] which also used in Qiskit.
+
+        **References:**
+        [1] Shende, Bullock, Markov. Synthesis of Quantum Logic Circuits (2004)
+        [`https://arxiv.org/abs/quant-ph/0406176v5`]
+
+        Returns:
+            bool: True if an instance of Amplitude Encoding was detected, False otherwise.
+        """
+        dag: DAGCircuit = circuit_to_dag(self.circuit)
+        structure_count: int = 0
+        rotation_layer_found: bool = False
+        expecting_layer_found: bool = False
+
+        possible_rotation_gates: list[str] = ["u3", "u2", "u1", "u", "rx", "ry", "rz",]
+
+        for layer in dag.layers():
+            for node in layer['graph'].front_layer():
+                if node.name in possible_rotation_gates and not rotation_layer_found:
+                    rotation_layer_found = True
+                    expecting_layer_found = True
+                    break
+
+                if rotation_layer_found and node.name == CXGate().name:
+                    structure_count += 1
+                    rotation_layer_found = False
+                    expecting_layer_found = True
+                    break
+
+            if structure_count >= 2:
+                return True
+            
+            if not expecting_layer_found:
+                return False
+            
+            expecting_layer_found = False
+    
+    def build_message(self) -> str:
+        """Construct a human-readable message about the detection result.
+        
+        Returns:
+            str: Message with information whether an instance of Amlitude Encoding was detected.
+        """
+        if self.detect_pattern():
+            return "Amlitude Encoding: Instance of Amlpitude Encoding detected.\n"
+
+        return "Amlitude Encoding: No instance detected.\n"
 
 
 class BasisEncodingDetector(PatternDetector):
@@ -83,7 +142,6 @@ class BasisEncodingDetector(PatternDetector):
         super().__init__(program)
         self.load_circuit(self.program)
 
-    # Search for Pauli-X gates in the first layer.
     def detect_pattern(self) -> list[tuple[int, str]]:
         """Detect instances of Basis Encoding.
 
@@ -100,7 +158,6 @@ class BasisEncodingDetector(PatternDetector):
             return []
             
         return instances
-
 
     def build_message(self) -> str:
         """Construct a human-readable message about the detection result.
