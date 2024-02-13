@@ -2,7 +2,7 @@
 
 from abstract_detector import PatternDetector
 
-from qiskit import QuantumRegister, QuantumCircuit, transpile
+from qiskit import QuantumRegister, QuantumCircuit
 from qiskit.circuit.library import XGate, RYGate, CXGate
 from qiskit.circuit.quantumcircuit import BitLocations, Qubit
 from qiskit.converters import circuit_to_dag
