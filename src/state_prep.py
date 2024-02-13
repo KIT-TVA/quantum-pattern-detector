@@ -2,7 +2,7 @@
 
 from abstract_detector import PatternDetector
 
-from qiskit import QuantumRegister, QuantumCircuit
+from qiskit import QuantumRegister, QuantumCircuit, transpile
 from qiskit.circuit.library import XGate, RYGate, CXGate
 from qiskit.circuit.quantumcircuit import BitLocations, Qubit
 from qiskit.converters import circuit_to_dag
@@ -64,6 +64,8 @@ class AngleEncodingDetector(PatternDetector):
 
 
 class AmplitudeEncodingDetector(PatternDetector):
+
+    THRESHOLD: int = 2
     
     def __init__(self, program: TextIOWrapper) -> None:
         """Create a new detector for Amplitude Encoding.
@@ -108,13 +110,16 @@ class AmplitudeEncodingDetector(PatternDetector):
                     expecting_layer_found = True
                     break
 
-            if structure_count >= 2:
+            if structure_count >= self.THRESHOLD:
                 return True
             
             if not expecting_layer_found:
-                return False
+                structure_count = 0
+                rotation_layer_found = False
             
             expecting_layer_found = False
+        
+        return False
     
     def build_message(self) -> str:
         """Construct a human-readable message about the detection result.
