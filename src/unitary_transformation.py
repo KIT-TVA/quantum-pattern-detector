@@ -6,7 +6,7 @@ from qiskit import QuantumCircuit
 from qiskit.circuit.quantumcircuit import BitLocations, Qubit
 from qiskit.converters import circuit_to_dag, dag_to_circuit
 from qiskit.dagcircuit import DAGCircuit, DAGOpNode
-from qiskit.circuit.library import HGate, CXGate, SwapGate
+from qiskit.circuit.library import HGate, CXGate, SwapGate, Measure
 from io import TextIOWrapper
 
 
@@ -186,7 +186,9 @@ class UncomputeDetector(PatternDetector):
                     window_circ: QuantumCircuit = self.get_subcircuit(window_start, window_end)
                     compare_circ: QuantumCircuit = self.get_subcircuit(compare_start, compare_end)
 
-                    if window_circ == compare_circ.inverse():
+                    if Measure().name not in [gate[0].name for gate in compare_circ.data] \
+                        and window_circ == compare_circ.inverse():
+
                         return True
 
                     compare_start += 1
