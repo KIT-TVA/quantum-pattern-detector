@@ -11,6 +11,7 @@ from unitary_transformation import PhaseEstimationDetector, UncomputeDetector
 from measurement import PostSelectiveMeasurementDetector
 
 from io import TextIOWrapper
+from pathlib import Path
 
 
 FILE_PATH: list[str] = ["adder_with_overflow",
@@ -54,6 +55,36 @@ def all_messages() -> str:
                 PhaseEstimationDetector(input_file).build_message() + "\n" + \
                 UncomputeDetector(input_file).build_message() + "\n" + \
                 PostSelectiveMeasurementDetector(input_file).build_message() + "\n\n"
+
+    return msg.strip()
+
+def all_messages(directory_path: str) -> str:
+    """Construct messages of all pattern detectors in a readable format for all OpenQASM files in a given directory.
+    
+    Returns: 
+        str: Messages of every pattern detector.
+    """
+    msg: str = ""
+    file_count: int = 0
+
+    pathlist = Path(directory_path).rglob('*.qasm')
+
+    for path in pathlist:
+        input_file: TextIOWrapper = open(str(path))
+        print(os.path.basename(str(path)))
+        msg += os.path.basename(str(path)) + ":" + "\n" + \
+            "---------------------------------" + "\n" + \
+            UniformSuperpositionDetector(input_file).build_message() + "\n" + \
+            EntanglementDetector(input_file).build_message() + "\n" + \
+            BasisEncodingDetector(input_file).build_message() + "\n" + \
+            AngleEncodingDetector(input_file).build_message() + "\n" + \
+            AmplitudeEncodingDetector(input_file).build_message() + "\n" + \
+            PhaseEstimationDetector(input_file).build_message() + "\n" + \
+            UncomputeDetector(input_file).build_message() + "\n" + \
+            PostSelectiveMeasurementDetector(input_file).build_message() + "\n\n"
+
+        file_count += 1
+        print(str(file_count) + "/" + str(68))
 
     return msg.strip()
 
@@ -476,4 +507,5 @@ def metrics_for_instance_detectors(
 
 
 if __name__ == '__main__':
-    print(all_metrics())
+    with open("C:\\quantum-pattern-detector\\evaluation\\dataset_cmp\\result.txt", "w") as result_file:
+        result_file.write(all_messages("C:\\quantum-pattern-detector\\evaluation\\dataset_cmp"))

@@ -1,0 +1,1243 @@
+3_17_13.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: Instance of Basis Encoding detected.
+Basis Encoding: Qubit 2 of register q is used for Basis Encoding.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+alu-v0_27.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+alu-v1_28.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+alu-v1_29.qasm:
+---------------------------------
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+alu-v2_33.qasm:
+---------------------------------
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+alu-v3_35.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+alu-v4_37.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+buggy_24.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+cnot.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+cnot_logic.qasm:
+---------------------------------
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+control_h.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+control_z.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: Instance of Basis Encoding detected.
+Basis Encoding: Qubit 0 of register q is used for Basis Encoding.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+ex-1_166.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+example_qiskit_conditional.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+fixed_16.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+ham3_102.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+logic_gates_creator_1.qasm:
+---------------------------------
+
+
+Basis Encoding: Instance of Basis Encoding detected.
+Basis Encoding: Qubit 0 of register q is used for Basis Encoding.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+logic_gates_creator_2.qasm:
+---------------------------------
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+logic_gates_creator_3.qasm:
+---------------------------------
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+logic_gates_creator_4.qasm:
+---------------------------------
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+logic_gates_creator_5.qasm:
+---------------------------------
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+miller_11.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+mod5d1_63.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+mod_mult_55_after_heavy.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_10dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_2crz.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_2dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_2opt.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_3.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_3dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: Instance of Amlpitude Encoding detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_3opt.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_4.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_4dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_5.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_5dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_6.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_6dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_7.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_7dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_8.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_8dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_9dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: Instance of Amlpitude Encoding detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_old_10dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: Instance of Amlpitude Encoding detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_old_4dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: Instance of Amlpitude Encoding detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_old_5dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: Instance of Amlpitude Encoding detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_old_6dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: Instance of Amlpitude Encoding detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_old_7dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: Instance of Amlpitude Encoding detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_old_8dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: Instance of Amlpitude Encoding detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+qft_old_9dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: Instance of Amlpitude Encoding detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+quantum_k_means.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+swap.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+teleport.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+teleport1.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: Instance of Post Selective Measurement detected.
+Post Selective Measurement: Post Selective Measurement performed on qubit 0.
+Post Selective Measurement: Post Selective Measurement performed on qubit 1.
+
+
+test_basic_swap_1.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+test_basic_swap_2.qasm:
+---------------------------------
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+test_dag_fixed_point_pass.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+test_dag_to_dagdependency.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: Instance of Post Selective Measurement detected.
+Post Selective Measurement: Post Selective Measurement performed on qubit 0.
+Post Selective Measurement: Post Selective Measurement performed on qubit 1.
+
+
+test_f16.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+test_lookahead_swap.qasm:
+---------------------------------
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+test_resource_estimation_pass.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+test_synthesis.qasm:
+---------------------------------
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: Instance of Amlpitude Encoding detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+test_width_pass.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+tof2_dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+toffoli_dec.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+toffoli_qiskit.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: Instance of Amlpitude Encoding detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+tof_5_after_heavy.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.
+
+
+toGraph2.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: No instance detected.
+
+Uncompute: No instance detected.
+
+Post Selective Measurement: No instance found.
+
+
+unknown_gate.qasm:
+---------------------------------
+Uniform Superposition: Quantum system is in uniform superposition from line 1 to 1.
+
+Creating Entanglement: Quantum state is entangled from line 1 to 1.
+
+Basis Encoding: No instance found.
+
+Angle Encoding: No instance found.
+
+Amlitude Encoding: No instance detected.
+
+Quantum Phase Estimation: Instance of Quantum Phase Estimation detected.
+
+Uncompute: Instance of Uncompute detected.
+
+Post Selective Measurement: No instance found.

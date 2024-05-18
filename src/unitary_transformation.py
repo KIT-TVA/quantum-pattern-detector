@@ -186,6 +186,7 @@ class UncomputeDetector(PatternDetector):
                     window_circ: QuantumCircuit = self.get_subcircuit(window_start, window_end)
                     compare_circ: QuantumCircuit = self.get_subcircuit(compare_start, compare_end)
 
+                    # Probably more non-invertible operations have to be added here.
                     if Measure().name not in [gate[0].name for gate in compare_circ.data] \
                         and window_circ == compare_circ.inverse():
 
