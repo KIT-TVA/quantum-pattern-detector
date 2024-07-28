@@ -9,10 +9,12 @@ from state_prep import AngleEncodingDetector, BasisEncodingDetector, AmplitudeEn
 from quantum_states import EntanglementDetector, UniformSuperpositionDetector
 from unitary_transformation import PhaseEstimationDetector, UncomputeDetector
 from measurement import PostSelectiveMeasurementDetector
-from io import TextIOWrapper
+
+from qiskit import QuantumCircuit
+from qiskit.circuit.random import random_circuit
+import qiskit.qasm2 
 
 import time
-
 
 def get_file_path(file_str: str, set_num: int, version: int) -> str:
     """Compute the path to the file with a certain name in the evaluation framework.
@@ -50,20 +52,48 @@ if __name__ == '__main__':
     else:
         raise ValueError("There is no support for detecting the given quantum pattern.")
 
-    name_map: dict[str, PatternDetector] = {"UniformSuperposition": UniformSuperpositionDetector,
-                                            "CreatingEntanglement": EntanglementDetector,
-                                            "BasisEncoding": BasisEncodingDetector,
-                                            "AngleEncoding": AngleEncodingDetector,
-                                            "AmplitudeEncoding": AmplitudeEncodingDetector,
-                                            "QuantumPhaseEstimation": PhaseEstimationDetector,
-                                            "Uncompute": UncomputeDetector,
-                                            "PostSelectiveMeasurement": PostSelectiveMeasurementDetector}
+    name_map = {"UniformSuperposition": (UniformSuperpositionDetector, [1,2,3,4,5,6,7,8,9,10,11,12,13]),
+                "CreatingEntanglement": (EntanglementDetector, [1,2,3,4,5,6,7,8,9,10,11,12,13]),
+                "BasisEncoding": (BasisEncodingDetector, [1,5,10,25,50,100,125,150,200,300,500,1000]),
+                "AngleEncoding": (AngleEncodingDetector, [1,5,10,25,50,100,125,150,200,300,500,1000]),
+                "AmplitudeEncoding": (AmplitudeEncodingDetector, [1,5,10,25,50,100,125,150,200,300,500,1000]),
+                "QuantumPhaseEstimation": (PhaseEstimationDetector, [1,5,10,25,50,100,125,150,200,300,500,1000]),
+                "Uncompute": (UncomputeDetector, [1,3,5,10,15,20,25,30,40,50,60,70,100]),
+                "PostSelectiveMeasurement": (PostSelectiveMeasurementDetector, [1,5,10,25,50,100,125,150,200,300,500,1000])}
 
-    for version in range(1, 14):
-        input_file: TextIOWrapper = open(get_file_path("ghz", set_num, version))
+#   for version in range(1, 14):
+#        input_file: TextIOWrapper = open(get_file_path("ghz", set_num, version))
 
-        start_time: float = time.time()
-        detector: PatternDetector = name_map[sys.argv[1]](input_file)
-        detector.build_message()
+#        start_time: float = time.time()
+#        detector: PatternDetector = name_map[sys.argv[1]](input_file)
+#        detector.build_message()
 
-        print("Version {v}: {time} seconds".format(v=version, time=time.time()-start_time))
+#        print("Version {v}: {time} seconds".format(v=version, time=time.time()-start_time))
+
+    print("Run 1: Constant depth, Increasing width.")
+    for i in name_map[sys.argv[1]][1]:
+        total_time: int = 0
+        for j in range(0,20):
+            circ: QuantumCircuit = random_circuit(i, 5)
+            qiskit.qasm2.dump(circ, "scal_test.txt")
+            detector: PatternDetector = name_map[sys.argv[1]][0](open("scal_test.txt"))
+            start_time: float = time.time()
+            detector.detect_pattern()
+            total_time += time.time()-start_time
+            
+        print("Qubits {n}: {time} seconds".format(n=i, time=total_time / 20))
+
+    print("Run 2: Constant width, Increasing depth.")
+    for i in name_map[sys.argv[1]][1]:
+        total_time: int = 0
+        for j in range(0,20):
+            circ: QuantumCircuit = random_circuit(3, i)
+            qiskit.qasm2.dump(circ, "scal_test.txt")
+            detector: PatternDetector = name_map[sys.argv[1]][0](open("scal_test.txt"))
+            start_time: float = time.time()
+            detector.detect_pattern()
+            total_time += time.time()-start_time
+            
+        print("Qubits {n}: {time} seconds".format(n=i, time=total_time / 20))
+        
+

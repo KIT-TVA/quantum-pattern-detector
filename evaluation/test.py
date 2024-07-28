@@ -507,5 +507,7 @@ def metrics_for_instance_detectors(
 
 
 if __name__ == '__main__':
-    with open("C:\\quantum-pattern-detector\\evaluation\\dataset_cmp\\result.txt", "w") as result_file:
-        result_file.write(all_messages("C:\\quantum-pattern-detector\\evaluation\\dataset_cmp"))
+    print(all_metrics())
+
+    # with open("C:\\quantum-pattern-detector\\evaluation\\dataset_cmp\\result.txt", "w") as result_file:
+    #    result_file.write(all_messages("C:\\quantum-pattern-detector\\evaluation\\dataset_cmp"))

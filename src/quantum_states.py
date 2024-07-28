@@ -106,7 +106,7 @@ class EntanglementDetector(PatternDetector):
                         "from line {start_ln} to {end_ln}.\n".format(start_ln=instance[0], end_ln=instance[1]))
             
         return message
-    
+
 
 class UniformSuperpositionDetector(PatternDetector):
     """Detector for the pattern Uniform Superposition."""
