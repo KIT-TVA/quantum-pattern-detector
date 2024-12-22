@@ -342,6 +342,12 @@ def metrics_for_instance_detectors(
 
 def load_ground_truth(metric_name: str) -> dict:
     """Loads the ground truth data for a given detector.
+
+    Args: 
+        metric_name (str): The abbreviation for the detector.
+
+    Returns:
+        dict: A dictionary containing the ground truth.
     """
     with open(parent_dir + "/evaluation/ground_truth.json") as json_data:
         ground_truth_data = json.load(json_data)
