@@ -4,6 +4,8 @@ import os, sys
 parent_dir: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir + "/src")
 
+import json
+
 from abstract_detector import PatternDetector
 from state_prep import AngleEncodingDetector, BasisEncodingDetector, AmplitudeEncodingDetector
 from quantum_states import EntanglementDetector, UniformSuperpositionDetector
@@ -111,28 +113,7 @@ def metrics_ufs() -> str:
     Returns:
         str: The calculated evaluation metrics for the Uniform Superposition detector.
     """
-    ground_truth: dict[str, list[tuple[int, int]]] = \
-        {"adder_with_overflow": [],
-         "adder_without_overflow": [],
-         "amplitude_encoding": [],
-         "amplitude_estimation": [(6,9)], 
-         "deutsch_jozsa": [(5,16)], 
-         "ghz": [(5,5)], 
-         "graph_state": [(5,13)], 
-         "grover": [(7,16), (20,21), (24,26)],
-         "hhl": [(11,18)],
-         "multiplier": [],
-         "qaoa": [(5,13)],
-         "qft": [(5,17)],
-         "qft_entangled": [(5,5), (14,17)],
-         "quantum_phase_estimation": [(6,15)],
-         "quantum_walk": [(6,7), (15,16), (21,23), (31,33)],
-         "real_amplitudes": [],
-         "shor": [(278,281)],
-         "su2": [],
-         "variational_quantum_eigensolver": [],
-         "wstate": []}
-    
+    ground_truth = load_ground_truth("ufs")
     metrics: tuple[float, float, float] = metrics_for_line_detectors(ground_truth, UniformSuperpositionDetector)
 
     return "Uniform superposition detector\n" + \
@@ -145,28 +126,7 @@ def metrics_entanglement() -> str:
     Returns:
         str: The calculated evaluation metrics for the Creating Entanglement detector.
     """
-    ground_truth: dict[str, list[tuple[int, int]]] = \
-        {"adder_with_overflow": [],
-         "adder_without_overflow": [],
-         "amplitude_encoding": [(7,22)],
-         "amplitude_estimation": [(12,25)], 
-         "deutsch_jozsa": [], 
-         "ghz": [(6,9)], 
-         "graph_state": [(7,15)], 
-         "grover": [(11,33)],
-         "hhl": [(26,501)],
-         "multiplier": [],
-         "qaoa": [(9,33)],
-         "qft": [],
-         "qft_entangled": [(6,23)],
-         "quantum_phase_estimation": [(15,21)],
-         "quantum_walk": [(8,29)],
-         "real_amplitudes": [(7,27)],
-         "shor": [(283,292)],
-         "su2": [(9,30)],
-         "variational_quantum_eigensolver": [(8,19)],
-         "wstate": [(10,15)]}
-    
+    ground_truth = load_ground_truth("entanglement")
     metrics: tuple[float, float, float] = metrics_for_line_detectors(ground_truth, EntanglementDetector)
 
     return "Entanglement detector\n" + \
@@ -179,28 +139,7 @@ def metrics_basis_encoding() -> str:
     Returns:
         str: The calculated evaluation metrics for the Basis Encoding detector.
     """
-    ground_truth: dict[str, bool] = \
-        {"adder_with_overflow": True,
-         "adder_without_overflow": True,
-         "amplitude_encoding": False,
-         "amplitude_estimation": False, 
-         "deutsch_jozsa": False, 
-         "ghz": False, 
-         "graph_state": False, 
-         "grover": False,
-         "hhl": False,
-         "multiplier": True,
-         "qaoa": False,
-         "qft": False,
-         "qft_entangled": False,
-         "quantum_phase_estimation": False,
-         "quantum_walk": False,
-         "real_amplitudes": False,
-         "shor": False,
-         "su2": False,
-         "variational_quantum_eigensolver": False,
-         "wstate": False}
-    
+    ground_truth = load_ground_truth("basis_encoding")
     metrics: tuple[float, float, float] = metrics_for_instance_detectors(
                                             ground_truth, 
                                             BasisEncodingDetector, 
@@ -217,28 +156,7 @@ def metrics_angle_encoding() -> str:
     Returns:
         str: The calculated evaluation metrics for the Angle Encoding detector.
     """
-    ground_truth: dict[str, bool] = \
-        {"adder_with_overflow": False,
-         "adder_without_overflow": False,
-         "amplitude_encoding": False,
-         "amplitude_estimation": False, 
-         "deutsch_jozsa": False, 
-         "ghz": False, 
-         "graph_state": False, 
-         "grover": False,
-         "hhl": False,
-         "multiplier": False,
-         "qaoa": False,
-         "qft": False,
-         "qft_entangled": False,
-         "quantum_phase_estimation": False,
-         "quantum_walk": False,
-         "real_amplitudes": True,
-         "shor": False,
-         "su2": True,
-         "variational_quantum_eigensolver": True,
-         "wstate": False}
-    
+    ground_truth = load_ground_truth("angle_encoding")
     metrics: tuple[float, float, float] = metrics_for_instance_detectors(
                                             ground_truth, 
                                             AngleEncodingDetector, 
@@ -255,28 +173,7 @@ def metrics_amplitude_encoding() -> str:
     Returns:
         str: The calculated evaluation metrics for the Amplitude Encoding detector.
     """
-    ground_truth: dict[str, bool] = \
-        {"adder_with_overflow": False,
-         "adder_without_overflow": False,
-         "amplitude_encoding": True,
-         "amplitude_estimation": False,
-         "deutsch_jozsa": False, 
-         "ghz": False, 
-         "graph_state": False, 
-         "grover": False,
-         "hhl": False,
-         "multiplier": False,
-         "qaoa": False,
-         "qft": False,
-         "qft_entangled": False,
-         "quantum_phase_estimation": False,
-         "quantum_walk": False,
-         "real_amplitudes": False,
-         "shor": False,
-         "su2": False,
-         "variational_quantum_eigensolver": False,
-         "wstate": False}
-    
+    ground_truth = load_ground_truth("amplitude_encoding")
     metrics: tuple[float, float, float] = metrics_for_instance_detectors(ground_truth, AmplitudeEncodingDetector)
 
     return "Amplitude Encoding detector\n" + \
@@ -289,28 +186,7 @@ def metrics_qpe() -> str:
     Returns:
         str: The calculated evaluation metrics for the Quantum Phase Estimation detector.
     """
-    ground_truth: dict[str, bool] = \
-        {"adder_with_overflow": False,
-         "adder_without_overflow": False,
-         "amplitude_encoding": False,
-         "amplitude_estimation": True, 
-         "deutsch_jozsa": False, 
-         "ghz": False, 
-         "graph_state": False, 
-         "grover": False,
-         "hhl": True,
-         "multiplier": False,
-         "qaoa": False,
-         "qft": False,
-         "qft_entangled": False,
-         "quantum_phase_estimation": True,
-         "quantum_walk": False,
-         "real_amplitudes": False,
-         "shor": True,
-         "su2": False,
-         "variational_quantum_eigensolver": False,
-         "wstate": False}
-    
+    ground_truth = load_ground_truth("qpe")
     metrics: tuple[float, float, float] = metrics_for_instance_detectors(ground_truth, PhaseEstimationDetector)
 
     return "Quantum Phase Estimation detector\n" + \
@@ -323,28 +199,7 @@ def metrics_uncompute() -> str:
     Returns:
         str: The calculated evaluation metrics for the Uncompute detector.
     """
-    ground_truth: dict[str, bool] = \
-        {"adder_with_overflow": False,
-         "adder_without_overflow": False,
-         "amplitude_encoding": True,
-         "amplitude_estimation": False, 
-         "deutsch_jozsa": True, 
-         "ghz": False, 
-         "graph_state": False, 
-         "grover": True,
-         "hhl": True,
-         "multiplier": False,
-         "qaoa": False,
-         "qft": False,
-         "qft_entangled": False,
-         "quantum_phase_estimation": False,
-         "quantum_walk": True,
-         "real_amplitudes": False,
-         "shor": False,
-         "su2": False,
-         "variational_quantum_eigensolver": False,
-         "wstate": False}
-    
+    ground_truth = load_ground_truth("uncompute")
     metrics: tuple[float, float, float] = metrics_for_instance_detectors(ground_truth, UncomputeDetector)
 
     return "Uncompute detector\n" + \
@@ -357,28 +212,7 @@ def metrics_psm() -> str:
     Returns:
         str: The calculated evaluation metrics for the Post Selective Measurement detector.
     """
-    ground_truth: dict[str, bool] = \
-        {"adder_with_overflow": False,
-         "adder_without_overflow": False,
-         "amplitude_encoding": False,
-         "amplitude_estimation": False, 
-         "deutsch_jozsa": False, 
-         "ghz": False, 
-         "graph_state": False, 
-         "grover": False,
-         "hhl": True,
-         "multiplier": False,
-         "qaoa": False,
-         "qft": False,
-         "qft_entangled": False,
-         "quantum_phase_estimation": False,
-         "quantum_walk": False,
-         "real_amplitudes": False,
-         "shor": False,
-         "su2": False,
-         "variational_quantum_eigensolver": False,
-         "wstate": False}
-    
+    ground_truth = load_ground_truth("psm")
     metrics: tuple[float, float, float] = metrics_for_instance_detectors(
                                             ground_truth, 
                                             PostSelectiveMeasurementDetector, 
@@ -444,8 +278,9 @@ def metrics_for_line_detectors(
     for key, value in ground_truth.items():
         input_file: TextIOWrapper = open(get_file_path(key))
         detected_instances: list[tuple[int, int]] = detector(input_file).detect_pattern()
+        converted_value: list[tuple[int, int]] = [tuple(l) for l in value]
 
-        if value == detected_instances:
+        if converted_value == detected_instances:
             true_positives += len(value)
             continue
 
@@ -504,6 +339,13 @@ def metrics_for_instance_detectors(
             false_negatives += 1
 
     return calculate_metrics(true_positives, false_positives, false_negatives)
+
+def load_ground_truth(metric_name: str) -> dict:
+    """Loads the ground truth data for a given detector.
+    """
+    with open(parent_dir + "/evaluation/ground_truth.json") as json_data:
+        ground_truth_data = json.load(json_data)
+    return ground_truth_data.get(metric_name, {})
 
 
 if __name__ == '__main__':
