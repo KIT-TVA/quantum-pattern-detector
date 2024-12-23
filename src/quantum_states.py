@@ -5,7 +5,7 @@ from utils import FileReader, get_combinations, convert_to_int
 from abstract_detector import PatternDetector
 
 from qiskit import Aer, transpile
-from qiskit_aer.backends import AerSimulator, StatevectorSimulator
+from qiskit_aer.backends import StatevectorSimulator
 from qiskit_aer.backends.compatibility import Statevector
 from qiskit.circuit.library import Measure
 from qiskit.converters import circuit_to_dag
@@ -159,7 +159,7 @@ class UniformSuperpositionDetector(PatternDetector):
 
             # Calculate measurement probabilities by simulating measurements.
             if has_measurement:
-                backend: AerSimulator = Aer.get_backend('aer_simulator')
+                backend: StatevectorSimulator = Aer.get_backend('statevector_simulator')
                 self.circuit = transpile(self.circuit, backend)
                 result: Result = backend.run(self.circuit).result()
                 counts: dict[str, int] = result.get_counts()

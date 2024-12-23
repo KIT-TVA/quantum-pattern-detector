@@ -60,7 +60,7 @@ def all_messages() -> str:
 
     return msg.strip()
 
-def all_messages(directory_path: str) -> str:
+def all_messages_from_path(directory_path: str) -> str:
     """Construct messages of all pattern detectors in a readable format for all OpenQASM files in a given directory.
     
     Returns: 

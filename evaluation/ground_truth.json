@@ -41,7 +41,7 @@
     "shor": [[283, 292]],
     "su2": [[9, 30]],
     "variational_quantum_eigensolver": [[8, 19]],
-    "wstate": [[10, 15]]
+    "wstate": [[10, 13]]
   },
   "basis_encoding": {
     "adder_with_overflow": true,
