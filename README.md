@@ -32,3 +32,20 @@ Follow the following steps for the reproduction of the evluation results:
    - `QuantumPhaseEstimation`
    - `Uncompute`
    - `PostSelectiveMeasurement`
+
+## Citation
+
+When publishing articles or otherwise writing about this work, please cite the following:
+
+```bibtex
+@INPROCEEDINGS{11029468,
+  author={Shen, Julian and Ammermann, Joshua and König, Christoph and Schaefer, Ina},
+  booktitle={2025 IEEE/ACM International Workshop on Quantum Software Engineering (Q-SE)}, 
+  title={Quantum Pattern Detection: Accurate State- and Circuit-Based Analyses}, 
+  year={2025},
+  volume={},
+  number={},
+  pages={9-16},
+  keywords={Computers;Quantum computing;Accuracy;Codes;Source coding;Conferences;Quantum mechanics;Programming;Software;Software engineering;Quantum Computing Patterns;Quantum Software Engineering;Pattern Detection;Quantum Computing},
+  doi={10.1109/Q-SE66736.2025.00008}}
+```
